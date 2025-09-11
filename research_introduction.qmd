@@ -1,0 +1,25 @@
+---
+title: "AI vs. Non-AI Careers"
+author: "Group 3"
+date: today
+format: 
+  html:
+    bibliography: references.bib
+    csl: csl/econometrica.csl
+    toc: true
+---
+
+# Introduction
+We live in a time when artificial intelligence (AI) is changing the way people work. Across industries, tasks that were once done by humans are being automated, while new opportunities are appearing that require different skills. In 2024, this topic is especially important because AI tools are no longer limited to technology companies—they are now widely used in healthcare, education, energy, retail, and many other sectors. Understanding how AI affects the job market helps prepare for shifts in employment, salary trends, and the creation of new professions.
+
+# Research Rationale
+We study this topic because the impact of AI on jobs is both a challenge and an opportunity for today’s workforce. Trends show that AI is displacing routine work while creating space for new, high-skill roles in areas such as AI ethics, automation operations, and data science. In 2024, it is crucial to examine these changes so job seekers know which skills to build and how to adapt to market demand. We expect to find that AI continues to reshape traditional roles but also opens new careers that combine human creativity, problem solving, and technical knowledge.
+
+# Literature Review
+Studies highlight that AI often leads to job shifting rather than complete job loss, with productivity gains linked to long-term job creation when training and policy support are present @george2024aifuture. At the same time, some occupations face real displacement risk where tasks are repetitive and routine, which increases the pressure to reskill @ansari2024consequences.
+
+Other scholarship points to the rise of new professions designed for an AI-driven economy—examples include AI Ethics Specialists, Smart Grid Engineers, and Telemedicine Coordinators—which did not exist a decade ago and are now growing rapidly @ejjami2024emerging. Recent work also shows the job market is being restructured as AI adoption shapes both the decline of certain roles and the emergence of opportunities that require continuous upskilling @ai2024jobmarket. Together, this literature suggests AI is transforming—not eliminating—the world of work, and future outcomes depend on how well workers, firms, and governments manage the transition.
+
+## References
+
+
