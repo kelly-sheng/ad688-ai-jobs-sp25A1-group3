@@ -10,6 +10,8 @@ website:
       - about.qmd
       - text: Introduction
         file: research_introduction.qmd
+      - href: data_analysis.qmd
+        text: Data Analysis
 
 
 format:
