@@ -17,3 +17,33 @@ format:
     df-print: paged
 ---
 
+# Loading Libraries and Data
+```{python}
+from pyspark.sql import SparkSession
+import pandas as pd
+import matplotlib.pyplot as plt
+
+raw_df = pd.read_csv("data/lightcast_job_postings.csv")
+raw_df.columns.tolist()
+```
+
+# Cleaning Data
+```{python}
+columns_to_drop = [
+    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
+    "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
+    "SOC_2", "SOC_3", "SOC_5"
+]
+raw_df.drop(columns=columns_to_drop, inplace=True)
+
+# Fill missing values
+raw_df["SALARY"].fillna(raw_df["SALARY"].median(), inplace=True)
+raw_df["NAICS_2022_6"].fillna("Unknown", inplace=True)
+
+# Drop columns with >50% missing values
+raw_df.dropna(thresh=len(raw_df) * 0.5, axis=1, inplace=True)
+
+raw_df = raw_df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
+
+raw_df.head()
+```
