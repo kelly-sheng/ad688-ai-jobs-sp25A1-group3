@@ -1,2 +1,4 @@
 /.quarto/
 **/*.quarto_ipynb
+lightcast_job_postings.csv
+ai_postings_by_industry.csv
