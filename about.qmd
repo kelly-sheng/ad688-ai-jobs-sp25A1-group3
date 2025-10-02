@@ -2,4 +2,4 @@
 title: "About"
 ---
 
-About this site
+Short Bio and Career goals
