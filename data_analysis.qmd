@@ -573,3 +573,243 @@ else:
 
 ```
 
+# Kmeans Clustering Setup
+```{python}
+#| echo: true
+#| error: true
+
+import os, re, numpy as np, pandas as pd, matplotlib.pyplot as plt
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, FunctionTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.decomposition import TruncatedSVD
+
+os.makedirs("output", exist_ok=True)
+
+# Use the already-cleaned frame if present, else load
+try:
+    df = raw_df.copy()
+except NameError:
+    df = pd.read_csv("data/lightcast_job_postings.csv")
+
+# Pick a text column robustly
+for c in ["TITLE_CLEAN", "TITLE", "TITLE_NAME", "TITLE_RAW"]:
+    if c in df.columns:
+        text_col = c
+        break
+else:
+    raise ValueError("No title column found (TITLE_CLEAN/TITLE/TITLE_NAME/TITLE_RAW).")
+
+# Coerce useful numerics
+for c in ["SALARY", "SALARY_FROM", "SALARY_TO", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "DURATION"]:
+    if c in df.columns:
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+
+# Candidate categoricals (kept if present & not too wide)
+candidate_cat = [
+    "REMOTE_TYPE_NAME", "STATE_NAME", "EMPLOYMENT_TYPE_NAME",
+    "COMPANY_IS_STAFFING", "NAICS_2022_6_NAME", "ONET_NAME", "SOC_2021_5_NAME"
+]
+cat_cols = [c for c in candidate_cat if c in df.columns]
+cat_cols = [c for c in cat_cols if df[c].nunique(dropna=True) <= 200]
+
+num_cols = [c for c in ["SALARY", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE", "DURATION"] if c in df.columns]
+
+print("Using columns:")
+print("  text_col:", text_col)
+print("  cat_cols:", cat_cols)
+print("  num_cols:", num_cols)
+
+```
+# Helpers
+```{python}
+#| echo: true
+#| error: true
+
+def _clean_text_input(x):
+    """
+    Accepts Series, 1-col DataFrame, or numpy array from ColumnTransformer
+    and returns a plain Python list[str] with NaNs -> "".
+    """
+    if isinstance(x, pd.Series):
+        s = x
+    elif isinstance(x, pd.DataFrame):
+        # take the first column
+        s = x.iloc[:, 0]
+    elif isinstance(x, np.ndarray):
+        # if 2-D (n,1) or (1,n), flatten to (n,)
+        if x.ndim == 2:
+            if x.shape[1] == 1:
+                s = pd.Series(x[:, 0])
+            else:
+                s = pd.Series(x.ravel())
+        else:
+            s = pd.Series(x)
+    else:
+        s = pd.Series(x)
+
+    s = s.astype("string").fillna("")
+    return s.tolist()   # ensure each doc is a plain string, not an array
+
+# Handle OneHotEncoder API difference
+try:
+    _ = OneHotEncoder(sparse_output=True)
+    _OHE_KW = {"sparse_output": True}
+except TypeError:
+    _OHE_KW = {"sparse": True}
+
+RANDOM_STATE = 42
+
+```
+# Preprocessing Pipeline
+```{python}
+#| echo: true
+#| error: true
+
+text_pipe = Pipeline([
+    ("clean", FunctionTransformer(_clean_text_input, validate=False)),
+    ("tfidf", TfidfVectorizer(
+        lowercase=True,
+        max_features=40_000,
+        ngram_range=(1, 2),
+        min_df=5
+    )),
+])
+
+cat_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("ohe", OneHotEncoder(handle_unknown="ignore", **_OHE_KW)),
+])
+
+num_pipe = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scaler", StandardScaler(with_mean=False)),
+])
+
+pre = ColumnTransformer(
+    transformers=[
+        ("txt", text_pipe, [text_col]),  # keep as list so CT passes a 2-D slice
+        ("cat", cat_pipe, cat_cols),
+        ("num", num_pipe, num_cols),
+    ],
+    sparse_threshold=1.0
+)
+
+X = pre.fit_transform(df)
+print("Feature matrix shape:", X.shape)
+```
+
+# Model selection
+```{python}
+#| echo: true
+#| error: true
+
+k_values = list(range(4, 11))
+inertias, sils = [], []
+
+# subsample for silhouette if very large
+if X.shape[0] > 8000:
+    rng = np.random.default_rng(RANDOM_STATE)
+    idx = rng.choice(X.shape[0], size=8000, replace=False)
+    X_sil = X[idx]
+else:
+    X_sil = X
+
+for k in k_values:
+    km = KMeans(n_clusters=k, n_init=20, random_state=RANDOM_STATE)
+    km.fit(X)
+    inertias.append(km.inertia_)
+    sils.append(silhouette_score(X_sil, km.predict(X_sil), metric="euclidean"))
+
+plt.figure(figsize=(10,4))
+plt.plot(k_values, inertias, marker="o")
+plt.xlabel("k"); plt.ylabel("Inertia"); plt.title("KMeans Elbow")
+plt.tight_layout(); plt.savefig("output/kmeans_elbow.png", dpi=150); plt.show()
+
+plt.figure(figsize=(10,4))
+plt.plot(k_values, sils, marker="o")
+plt.xlabel("k"); plt.ylabel("Silhouette"); plt.title("KMeans Silhouette (subsample)")
+plt.tight_layout(); plt.savefig("output/kmeans_silhouette.png", dpi=150); plt.show()
+
+best_k = int(k_values[int(np.argmax(sils))])
+print("Chosen k:", best_k)
+
+```
+
+# Final fit and cluster sizes
+```{python}
+#| echo: true
+#| error: true
+
+kmeans = KMeans(n_clusters=best_k, n_init=20, random_state=RANDOM_STATE)
+labels = kmeans.fit_predict(X)
+
+df_clusters = df[[text_col] + cat_cols + num_cols].copy()
+df_clusters["cluster"] = labels
+
+sizes = df_clusters["cluster"].value_counts().sort_index()
+print("Cluster sizes:\n", sizes)
+
+sizes.to_csv("output/cluster_sizes.csv")
+df_clusters.to_csv("output/cluster_assignments.csv", index=False)
+
+```
+
+# top TF-DF terms per cluster
+```{python}
+#| echo: true
+#| error: true
+
+tfidf = pre.named_transformers_["txt"].named_steps["tfidf"]
+terms = np.array(tfidf.get_feature_names_out())
+
+# Build text-only matrix from cleaned text
+text_only = tfidf.transform(_clean_text_input(df[text_col]))
+
+top_n = 15
+top_terms = {}
+for c in range(best_k):
+    mask = (labels == c)
+    if mask.sum() == 0:
+        top_terms[c] = []
+        continue
+    centroid = text_only[mask].mean(axis=0)
+    centroid = np.asarray(centroid).ravel()
+    idx = np.argsort(centroid)[::-1][:top_n]
+    top_terms[c] = terms[idx].tolist()
+
+for c in range(best_k):
+    print(f"\nCluster {c} — top terms:")
+    print(", ".join(top_terms[c]))
+
+with open("output/cluster_top_terms.txt", "w") as f:
+    for c in range(best_k):
+        f.write(f"Cluster {c} — top terms:\n")
+        f.write(", ".join(top_terms[c]) + "\n\n")
+
+```
+
+# 2D SVD
+```{python}
+#| echo: true
+#| error: true
+
+svd = TruncatedSVD(n_components=2, random_state=RANDOM_STATE)
+XY = svd.fit_transform(X)
+
+plt.figure(figsize=(9,6))
+plt.scatter(XY[:,0], XY[:,1], c=labels, s=6, alpha=0.5, cmap="tab10")
+plt.title("KMeans clusters (2-D SVD embedding)")
+plt.xlabel("SVD 1"); plt.ylabel("SVD 2")
+plt.tight_layout(); plt.savefig("output/kmeans_svd_scatter.png", dpi=150); plt.show()
+
+```
+# Cluster lookup
+```{python}
+
+```
