@@ -24,7 +24,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 raw_df = pd.read_csv("data/lightcast_job_postings.csv")
-raw_df.columns.tolist()
+#raw_df.columns.tolist()
 ```
 
 # Cleaning Data
@@ -45,7 +45,7 @@ raw_df.dropna(thresh=len(raw_df) * 0.5, axis=1, inplace=True)
 
 raw_df = raw_df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
 
-raw_df.head()
+#raw_df.head()
 ```
 
 # Plot setup for AI vs Non-AI job posting count
@@ -117,6 +117,7 @@ monthly_plt = monthly.copy()
 monthly_plt.head(12)
 
 
+
 ```
 
 # Job Postings for AI vs Non-AI Jobs
@@ -147,6 +148,15 @@ plt.savefig("output/ai_vs_nonai_over_time.png", dpi=200, bbox_inches="tight")
 plt.show()
 
 ```
+
+The AI VS Non-AI Jobs graph hows two clear trends: 
+
+- AI jobs have been increasing uninterruptedly each month from May to September 2024. This suggests growing demand for AI-related roles. 
+
+- Non-AI jobs started much higher but declined between May and July before slightly recovering in August. By September, they still remained lower than at the start.
+
+In simple terms, while non-AI jobs remain larger in number, AI jobs are rising quickly, showing a shift in the job market toward AI-focused opportunities.
+
 
 # Prep for monthly AI counts 
 ```{python}
@@ -237,6 +247,8 @@ growth_top_rounded["growth_pct"] = growth_top_rounded["growth_pct"].round(1)
 growth_top_rounded.head(top_n)
 
 ```
+
+
 
 # AI-Driven Job Growth by Industry
 ```{python}

@@ -1,0 +1,340 @@
+---
+title: "Skill Gap Analysis"
+subtitle: "Compare the skills required in IT job postings against the actual skills of group members to identify knowledge gaps and areas for improvement."
+author:
+  - name: Kelly, Sabrina, Makenzie
+    affiliations:
+      - id: bu
+        name: Boston University
+        city: Boston
+        state: MA
+bibliography: references.bib
+csl: csl/econometrica.csl
+format: 
+  html:
+    toc: true
+    number-sections: true
+    df-print: paged
+---
+
+# Loading Libraries and Data
+```{python}
+from pyspark.sql import SparkSession
+import pandas as pd
+import matplotlib.pyplot as plt
+
+raw_df = pd.read_csv("data/lightcast_job_postings.csv")
+#raw_df.columns.tolist()
+```
+
+# Cleaning Data
+```{python}
+columns_to_drop = [
+    "ID", "URL", "ACTIVE_URLS", "DUPLICATES", "LAST_UPDATED_TIMESTAMP",
+    "NAICS2", "NAICS3", "NAICS4", "NAICS5", "NAICS6",
+    "SOC_2", "SOC_3", "SOC_5"
+]
+raw_df.drop(columns=columns_to_drop, inplace=True)
+
+# Fill missing values
+raw_df["SALARY"].fillna(raw_df["SALARY"].median(), inplace=True)
+raw_df["NAICS_2022_6"].fillna("Unknown", inplace=True)
+
+# Drop columns with >50% missing values
+raw_df.dropna(thresh=len(raw_df) * 0.5, axis=1, inplace=True)
+
+raw_df = raw_df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"], keep="first")
+
+#raw_df.head()
+```
+
+# Create a team-based skill dataframe
+
+Using numerical Scale (1-5) to indicate proficiency levels:
+
+- 1 = Beginner
+- 2 = Basic knowledge
+- 3 = Intermediate
+- 4 = Advanced
+- 5 = Expert
+
+```{python}
+import pandas as pd
+
+skills_data = {
+    "Name": ["Mackenzie", "Sabrina", "Kelly"],
+    "Communication": [4, 4, 4],
+    "Data Analysis": [2, 3, 4],
+    "Management": [4, 2, 3],
+    "SQL (Programming Language)": [2, 4, 4],
+    "Problem Solving": [3, 4, 4],
+    "Leadership": [4, 4, 3],
+    "Computer Science": [1, 3, 1],
+    "Operations": [2, 1, 2],
+    "Project Management": [2, 2, 2],
+    "Business Process": [2, 3, 3],
+    "Business Requirements": [3, 1, 2],
+    "Excel": [3, 2, 5],
+    "Finance": [1, 2, 3],
+    "Python (Programming Language)": [2, 3, 3],
+    "Detail Oriented": [5, 4, 3],
+    "SAP Applications": [4, 3, 1],
+    "Dashboard": [4, 4, 1],
+    "Presentations": [5, 3, 2],
+    "Tableau (Business Intelligence Software)": [4, 5, 3],
+    "Planning": [4, 3, 3]
+}
+
+df_skills = pd.DataFrame(skills_data)
+df_skills.set_index("Name", inplace=True)
+df_skills
+
+```
+
+```{python}
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_skills, annot=True, cmap="coolwarm", linewidths=0.5, vmin=1, vmax=5)
+plt.title("Team Skill Levels Heatmap")
+plt.yticks(rotation=0)    # keep names horizontal
+plt.tight_layout()
+plt.savefig("output/team_skills_heatmap.png", dpi=300)
+plt.show()
+plt.close()
+```
+
+## Top strengths per person** 
+
+```{python}
+top_strengths = df_skills.apply(lambda row: row[row == row.max()].index.tolist(), axis=1)
+top_strengths.to_frame(name="Top Strength Skills")
+
+```
+
+## Team averages by skill (helps spot collective gaps)*
+
+```{python}
+team_avg = df_skills.mean().sort_values(ascending=False)
+team_avg.to_frame(name="Team Average (1–5)")
+
+```
+
+# Compare team skills to industry requirements
+
+## Extract the Most In-Demand Skills from IT Job Postings 
+
+```{python}
+from collections import Counter
+import ast
+import pandas as pd
+
+# 1) Parse SKILLS_NAME into Python lists
+raw_df["SKILLS_NAME"] = raw_df["SKILLS_NAME"].apply(
+    lambda x: ast.literal_eval(x) if isinstance(x, str) and x.strip().startswith("[") else (x if isinstance(x, list) else [])
+)
+
+# aliasing to unify common variants 
+alias_map = {
+    "SQL": "SQL (Programming Language)",
+    "Sql": "SQL (Programming Language)",
+    "MS Excel": "Excel",
+    "Microsoft Excel": "Excel",
+    "PowerBI": "Power BI",
+}
+def canon_skill(s: str) -> str:
+    s = s.strip()
+    return alias_map.get(s, s)
+
+# 3) Flatten and count
+all_skills = [canon_skill(s) for sublist in raw_df["SKILLS_NAME"] for s in (sublist if isinstance(sublist, list) else []) if isinstance(s, str)]
+skill_counts = Counter([s for s in all_skills if s])
+
+# 4) Top 20
+top_skills = [skill for skill, _ in skill_counts.most_common(20)]
+print("Top 20 skills (dataset):", top_skills)
+
+```
+
+
+## Industry expertise demand (data-driven 1–5)
+
+In this section, we estimated a 1–5 industry demand for each top skill by combining years of experience, title seniority, and proficiency phrases in job ads, then averaged those signals to set targets we compared to our team’s ratings.
+
+```{python}
+import re
+import numpy as np
+
+# Build text fields if they exist; otherwise empty strings
+title_col = "TITLE" if "TITLE" in raw_df.columns else None
+body_col  = "BODY"  if "BODY"  in raw_df.columns else None
+
+text_title = raw_df[title_col].astype(str).str.lower() if title_col else ""
+text_body  = raw_df[body_col].astype(str).str.lower()  if body_col  else ""
+text_all   = (text_title + " " + text_body).astype(str).str.strip()
+
+# Prefer MIN_YEARS_EXPERIENCE if present; else parse "3+ years" from text
+min_col = "MIN_YEARS_EXPERIENCE" if "MIN_YEARS_EXPERIENCE" in raw_df.columns else None
+min_years = pd.to_numeric(raw_df[min_col], errors="coerce") if min_col else pd.Series(np.nan, index=raw_df.index)
+
+def extract_years_from_text(text):
+    if not isinstance(text, str): return np.nan
+    m = re.search(r'(\d+)\s*\+?\s*(?:years?|yrs)\s+(?:of\s+)?experience', text, flags=re.I)
+    return float(m.group(1)) if m else np.nan
+
+years_from_text = text_all.apply(extract_years_from_text)
+years_req = min_years.where(min_years.notna(), years_from_text)
+
+def years_to_level_from_min(y):
+    if pd.isna(y): return np.nan
+    y = float(y)
+    base = 1 if y < 1 else 2 if y < 2 else 3 if y < 4 else 4 if y < 6 else 5
+    return min(5, base + 0.3)  # small bump so "3 years" ≈ mid of typical 3–5
+
+years_level = years_req.apply(years_to_level_from_min)
+
+def seniority_from_title(t):
+    if not isinstance(t, str): return np.nan
+    if re.search(r'\b(intern|junior|jr|entry)\b', t):             return 2
+    if re.search(r'\b(senior|sr|lead|principal|architect)\b', t): return 5
+    if re.search(r'\b(manager|director|head)\b', t):              return 5
+    return 3
+
+seniority_level = text_title.apply(seniority_from_title) if title_col else pd.Series(np.nan, index=raw_df.index)
+
+PHRASE_LEVELS = [
+    (r'\b(expert|expertise|mastery|guru)\b', 5),
+    (r'\b(advanced|in-depth|strong|proficient|hands-on|solid)\b', 4),
+    (r'\b(intermediate|working knowledge)\b', 3),
+    (r'\b(basic|knowledge of|familiarity)\b', 2),
+]
+def phrase_level(text):
+    if not isinstance(text, str): return np.nan
+    lvl = np.nan
+    for pat, v in PHRASE_LEVELS:
+        if re.search(pat, text):
+            lvl = v if pd.isna(lvl) else max(lvl, v)
+    return lvl
+
+phrase_level_series = text_all.apply(phrase_level)
+
+# Explode one row per (posting, skill), keep only Top 10 skills
+exploded = pd.DataFrame({
+    "SKILLS_LIST": raw_df["SKILLS_NAME"],
+    "years_level": years_level,
+    "seniority_level": seniority_level,
+    "phrase_level": phrase_level_series
+}).explode("SKILLS_LIST")
+
+exploded["SKILL"] = exploded["SKILLS_LIST"].astype(str).apply(canon_skill)
+exploded = exploded[exploded["SKILL"].isin(top_skills)]
+
+# Combine signals → expected level per row
+w_years, w_seniority, w_phrase = 0.5, 0.3, 0.2
+def combine_levels(row):
+    vals, wts = [], []
+    if pd.notna(row["years_level"]):     vals.append(row["years_level"]);     wts.append(w_years)
+    if pd.notna(row["seniority_level"]): vals.append(row["seniority_level"]); wts.append(w_seniority)
+    if pd.notna(row["phrase_level"]):    vals.append(row["phrase_level"]);    wts.append(w_phrase)
+    if not vals: return 3.0
+    return float(np.average(vals, weights=wts))
+
+exploded["EXPECTED_LEVEL"] = exploded.apply(combine_levels, axis=1)
+
+# Final per-skill target (1–5)
+expected_per_skill = (
+    exploded.groupby("SKILL")["EXPECTED_LEVEL"]
+            .mean()
+            .clip(1,5)
+            .round(2)
+            .reindex(top_skills)
+)
+expected_per_skill.name = "Target (Data-Driven)"
+expected_per_skill
+```
+
+
+## Team Skills Vs. Industry Requiments 
+```{python}
+# If df_skills already exists, this will use it; else create a minimal placeholder
+if "df_skills" not in globals():
+    df_skills = pd.DataFrame({
+        "Name": ["Kel","Mak","Maria"],
+        **{s: [2,2,2] for s in top_skills}  # simple placeholder
+    }).set_index("Name")
+
+# Make sure all top_skills are present as numeric 0–5
+for s in top_skills:
+    if s not in df_skills.columns:
+        df_skills[s] = 0
+
+df_team_top10 = (
+    df_skills[top_skills]
+      .apply(pd.to_numeric, errors="coerce")
+      .fillna(0).clip(0,5)
+)
+
+# Build comparison frame
+industry_expectations_dd = pd.DataFrame(
+    [expected_per_skill.values],
+    index=["Industry Expectation (Data-Driven)"],
+    columns=expected_per_skill.index
+)
+comparison_df_dd = pd.concat([df_team_top10, industry_expectations_dd])
+comparison_df_dd
+
+```
+
+```{python}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(comparison_df_dd, annot=True, cmap="YlGnBu", linewidths=0.5, vmin=0, vmax=5)
+plt.title("Team vs. Industry Expertise Demand (Top 10 Skills) — Data-Driven Targets")
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.savefig("output/team_vs_Industry_expertise_demand_skills_heatmap.png", dpi=300)
+plt.show()
+plt.close()
+
+```
+
+## Gaps + Market Adjusted Priorities
+
+```{python}
+# Unweighted gap (Target − Team Avg)
+team_avg = df_team_top10.mean()
+gap = expected_per_skill - team_avg
+
+gap_table = (
+    pd.DataFrame({
+        "Avg Team Level": team_avg.round(2),
+        "Target (Data-Driven)": expected_per_skill.round(2),
+        "Gap (Target − Avg)": gap.round(2)
+    })
+    .sort_values("Gap (Target − Avg)", ascending=False)
+)
+gap_table
+
+
+```
+
+```{python}
+# Weighted priority by demand share (based on counts you computed in A)
+total_cnt = sum(skill_counts.get(s, 0) for s in top_skills) or 1
+weights = pd.Series({s: skill_counts.get(s,0)/total_cnt for s in top_skills})
+
+weighted_priority = (gap * weights).sort_values(ascending=False).round(3)
+
+weighted_gap_table = pd.DataFrame({
+    "Gap (Target − Avg)": gap.round(2),
+    "Demand Weight": weights.round(3),
+    "Weighted Priority": weighted_priority
+}).sort_values("Weighted Priority", ascending=False)
+
+weighted_gap_table
+```
+
