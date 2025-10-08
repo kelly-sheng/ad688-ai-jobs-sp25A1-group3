@@ -50,13 +50,15 @@ raw_df = raw_df.drop_duplicates(subset=["TITLE", "COMPANY", "LOCATION", "POSTED"
 
 # Create a team-based skill dataframe
 
-Using numerical Scale (1-5) to indicate proficiency levels:
+ Use Scale (1-5) to indicate proficiency levels for each team Member: 
 
 - 1 = Beginner
 - 2 = Basic knowledge
 - 3 = Intermediate
 - 4 = Advanced
 - 5 = Expert
+
+**Note:** We build the team skill dataframe based on our skills and the most in-demand IT skills and set 1-5 levels for each team member. This allows us to compare side by side in the comparation analysis below.
 
 ```{python}
 import pandas as pd
@@ -89,9 +91,7 @@ df_skills = pd.DataFrame(skills_data)
 df_skills.set_index("Name", inplace=True)
 df_skills
 
-```
-
-```{python}
+#--- Plot -----
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -104,7 +104,10 @@ plt.tight_layout()
 plt.savefig("output/team_skills_heatmap.png", dpi=300)
 plt.show()
 plt.close()
+
 ```
+
+The team skills levels headmap demostrated we are strogest in communication and problem solving. We also solid in SQL, dashboard /Tableau, and finance. Our weak spots are Computer Science, operations, project management, and writing clear business requiments and process steps. 
 
 ## Top strengths per person** 
 
@@ -114,7 +117,7 @@ top_strengths.to_frame(name="Top Strength Skills")
 
 ```
 
-## Team averages by skill (helps spot collective gaps)*
+## Team averages by skill
 
 ```{python}
 team_avg = df_skills.mean().sort_values(ascending=False)
@@ -131,12 +134,13 @@ from collections import Counter
 import ast
 import pandas as pd
 
-# 1) Parse SKILLS_NAME into Python lists
+#  Parse SKILLS_NAME into Python lists
 raw_df["SKILLS_NAME"] = raw_df["SKILLS_NAME"].apply(
     lambda x: ast.literal_eval(x) if isinstance(x, str) and x.strip().startswith("[") else (x if isinstance(x, list) else [])
 )
 
-# aliasing to unify common variants 
+# rename things so similar ones match and stay consistent
+
 alias_map = {
     "SQL": "SQL (Programming Language)",
     "Sql": "SQL (Programming Language)",
@@ -148,13 +152,13 @@ def canon_skill(s: str) -> str:
     s = s.strip()
     return alias_map.get(s, s)
 
-# 3) Flatten and count
+# 3) Combines and count
 all_skills = [canon_skill(s) for sublist in raw_df["SKILLS_NAME"] for s in (sublist if isinstance(sublist, list) else []) if isinstance(s, str)]
 skill_counts = Counter([s for s in all_skills if s])
 
-# 4) Top 20
+# 4) Top Skills 
 top_skills = [skill for skill, _ in skill_counts.most_common(20)]
-print("Top 20 skills (dataset):", top_skills)
+print("Top skills (dataset):", top_skills)
 
 ```
 
@@ -302,6 +306,8 @@ plt.close()
 
 ```
 
+The team vs. industry headmad compares our skills to the market targets (bottom row). We meet or beat the target in communication and Tableau and are close on problem solving, Excel, and detail-oriented work. We are below the target in computer science, operations, project management, business requirements/process, leadership, finance, Python, and SQL. Our focus should be to raise those areas to about 3.5 or 4 with short courses and practice. Overall, we explain and show insights well, but we need stronger basics and delivery skills to match the market. 
+
 ## Gaps + Market Adjusted Priorities
 
 ```{python}
@@ -338,4 +344,4 @@ weighted_gap_table = pd.DataFrame({
 weighted_gap_table
 ```
 
-# Final Analysis Here
+# Propose an improvement plan

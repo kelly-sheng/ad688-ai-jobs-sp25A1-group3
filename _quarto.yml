@@ -16,7 +16,7 @@ website:
         text: Skill Gap Analysis
       - href: ml_methods.qmd
         text: ML Methods
-      - href: clustering_methods.qmd
+      - href: KMeans_clustering_methods.qmd
         text: KMeans Clustering
 
 format:
