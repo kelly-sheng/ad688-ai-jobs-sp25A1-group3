@@ -11,7 +11,7 @@ website:
       - text: Introduction
         file: research_introduction.qmd
       - href: data_analysis.qmd
-        text: Data Cleaning and Exploratory Data Analysis
+        text: Exploratory Data Analysis
       - href: skill_gap_analysis.qmd
         text: Skill Gap Analysis
       - href: ml_methods.qmd
