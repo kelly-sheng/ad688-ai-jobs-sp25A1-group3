@@ -309,6 +309,9 @@ plt.show()
 
 ```
 
+
+
+
 # Non-AI Job Posting Growth by Industry setup
 ```{python}
 #| echo: true
