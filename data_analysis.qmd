@@ -248,7 +248,7 @@ growth_top_rounded.head(top_n)
 
 ```
 
-
+In this table, we can see AI job postings growing across many industries. A few sectors jump fast but are small, like Other Holding Companies and Motor Vehicle Parts, and sound signals, but the totals are low, so that they may swing. The strongest, faster growth in real volume is in Temporary Help Services, Other Management Consulting, and Other Computer-Related Services; their monthly averages more than doubled. R&D and Executive Search are up too, with mid totals. There is also a growing group called "Unclassified." This group includes various categories, so we need to use this data carefully. 
 
 # AI-Driven Job Growth by Industry
 ```{python}

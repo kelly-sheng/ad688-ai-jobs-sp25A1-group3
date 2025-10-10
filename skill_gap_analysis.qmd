@@ -165,7 +165,7 @@ print("Top skills (dataset):", top_skills)
 
 ## Industry expertise demand (data-driven 1–5)
 
-In this section, we estimated a 1–5 industry demand for each top skill by combining years of experience, title seniority, and proficiency phrases in job ads, then averaged those signals to set targets we compared to our team’s ratings.
+In this section, We built a simple market target for each top skill using what employers write in job postings. First, we joined the job title and description so we could read the text. If a post listed MIN_YEARS_EXPERIENCE, we used it; if not, we pulled numbers like “3+ years” from the text and mapped years to a 1–5 level (with a small bump so “3 years” sits in the middle of a 3–5 range). Next, we read seniority words in the title (junior vs. senior/lead/manager) and skill phrases in the text (basic, intermediate, advanced, expert) and turned those into levels too. For each posting and skill, we combined the three signals, years (50%), seniority (30%), and phrases (20%) to get one score. Finally, we averaged those scores across all postings for each skill to get a 1–5 industry target, which we used to compare with our team’s ratings.
 
 ```{python}
 import re
@@ -266,7 +266,7 @@ expected_per_skill
 if "df_skills" not in globals():
     df_skills = pd.DataFrame({
         "Name": ["Kel","Mak","Maria"],
-        **{s: [2,2,2] for s in top_skills}  # simple placeholder
+        **{s: [2,2,2] for s in top_skills} 
     }).set_index("Name")
 
 # Make sure all top_skills are present as numeric 0–5
@@ -328,20 +328,17 @@ gap_table
 
 ```
 
-```{python}
-# Weighted priority by demand share (based on counts you computed in A)
-total_cnt = sum(skill_counts.get(s, 0) for s in top_skills) or 1
-weights = pd.Series({s: skill_counts.get(s,0)/total_cnt for s in top_skills})
+The gaps table shows where we sit below the market target. Positive numbers mean we need to improve; negative numbers mean we already meet or beat the target. Our biggest gaps are in computer science, operations, business requirements, project management, and finance. Smaller gaps show up in SAP, business process, and Python. We already match or exceed the market in communication, Tableau, and being detail-oriented.
 
-weighted_priority = (gap * weights).sort_values(ascending=False).round(3)
+To set priorities, we adjust each gap by how common the skill is in job postings (market-adjusted priority). Using that, we should first focus on computer science and operations, then business requirements and project management, followed by finance/SAP. This plan lets us close the largest, most market-relevant gaps first while keeping our strengths sharp.
 
-weighted_gap_table = pd.DataFrame({
-    "Gap (Target − Avg)": gap.round(2),
-    "Demand Weight": weights.round(3),
-    "Weighted Priority": weighted_priority
-}).sort_values("Weighted Priority", ascending=False)
 
-weighted_gap_table
-```
+# Improvement Plan 
 
-# Propose an improvement plan
+To improve our IT skills, we can focus on computer science basics, business requirements, project management, and operations. Mackenzie can prioritize computer science, then operations, finance, and project management. Sabrina will focus on project management, business requirements, and operations. Finally, Kelly can focus on computer science, then business requirements, operations, and SAP basics. We can keep our strengths, such as communication, Tableau, SQL, and problem-solving, refreshed with light weekly practice.
+
+Additionally, we could use the following resources to improve our skills: Harvard CS50x for an introduction to computer science (a free course) and LeetCode for practice. For the programming languages SQL and Python, we can use Coursera and DataCamp courses, and LeetCode for programming exercises, which are really helpful for interview practice. For Project Management and operations, we can take the Google Project Management on Coursera. For business requirements, we can take the Managing Requirements for the Business Analysis course on Pluralsight. For finance, we can use Khan Academy’s accounting and financial statements modules. For SAP, we can use SAP Learning’s free fundamentals. For Excel, we can follow Microsoft Learn’s Excel path to reach level 3+.
+
+Finally, we can address our skill gaps with a simple schedule. We can meet weekly or every other week and rotate knowledge guides for each session. If someone is great at project management or another skill, they will share their knowledge and tips. We will work on small, practical projects where we code together, review each other’s work, and discuss what we find. We can keep a shared document and a simple dashboard using a template to track each person’s goals, progress, and next steps for each area that needs improvement. After each session, we will note what we learned, what held us back, and what went well to keep improving.
+
+
