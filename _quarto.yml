@@ -2,11 +2,9 @@ project:
   type: website
 
 website:
-  title: "AI Jobs"
+  title: "AI vs. Non-AI Careers"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
       - about.qmd
       - text: Introduction
         file: research_introduction.qmd
@@ -17,7 +15,7 @@ website:
       - href: ml_methods.qmd
         text: ML Methods
       - href: KMeans_clustering_methods.qmd
-        text: KMeans Clustering
+        text: K-Means Clustering
 
 format:
   html:

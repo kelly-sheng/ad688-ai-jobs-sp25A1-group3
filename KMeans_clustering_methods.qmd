@@ -1,4 +1,26 @@
+---
+title: "K-Means Clustering"
+subtitle: "Compare job title, salary, and industry between AI and non-AI roles"
+author:
+  - name: Kelly, Sabrina, Makenzie
+    affiliations:
+      - id: bu
+        name: Boston University
+        city: Boston
+        state: MA
+bibliography: references.bib
+csl: csl/econometrica.csl
+format: 
+  html:
+    toc: true
+    number-sections: true
+    df-print: paged
+jupyter: python3
+---
+
+
 # Kmeans Clustering Setup
+
 ```{python}
 #| echo: true
 #| error: true

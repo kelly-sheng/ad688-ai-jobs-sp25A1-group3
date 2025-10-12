@@ -1,6 +1,6 @@
 ---
-title: "Final Report"
-subtitle: " "
+title: AI vs. Non-AI Careers
+subtitle: " Group 3 Final Report"
 author:
   - name: Kelly, Sabrina, Makenzie
     affiliations:
@@ -8,11 +8,25 @@ author:
         name: Boston University
         city: Boston
         state: MA
-bibliography: references.bib
-csl: csl/econometrica.csl
+number-sections: true
+date: '2025-10-15'
+date-modified: today
+date-format: long
 format: 
-  html:
-    toc: true
-    number-sections: true
-    df-print: paged
+      docx: default
 ---
+
+{{< include research_introduction.qmd >}}
+
+{{< include data_analysis.qmd >}}
+
+{{< include skill_gap_analysis.qmd >}}
+
+{{< include KMeans_clustering_methods.qmd >}}
+
+{{< include ml_methods.qmd >}}
+
+
+
+
+
