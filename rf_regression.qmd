@@ -1,0 +1,96 @@
+---
+title: "Random Forest Regression"
+subtitle: "Predicting AI Expectation in Job Roles"
+author:
+  - name: Kelly, Sabrina, Makenzie
+    affiliations:
+      - id: bu
+        name: Boston University
+        city: Boston
+        state: MA
+bibliography: references.bib
+csl: csl/econometrica.csl
+format: 
+  html:
+    toc: true
+    number-sections: true
+    df-print: paged
+---
+
+# Setup
+```{python}
+# --- Setup ---
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import (
+    col, lower, concat_ws, when, mean as _mean, lit, regexp_replace, isnan
+)
+from pyspark.sql.types import DoubleType
+
+spark = SparkSession.builder.appName("LightcastData").getOrCreate()
+
+df = (spark.read.option("header", "true").option("inferSchema", "true").option("multiLine", "true").option("escape", "\"").csv("data/lightcast_job_postings.csv"))
+
+# --- Drop rows with too many NULLs (e.g., >50% missing) ---
+threshold = int(len(df.columns) * 0.5)
+df = df.dropna(thresh=threshold)
+
+# --- Fill missing numeric columns with median/mean ---
+numeric_cols = ["SALARY_FROM", "SALARY_TO", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE"]
+for c in numeric_cols:
+    df = df.withColumn(c, col(c).cast(DoubleType()))
+    mean_val = df.select(_mean(col(c))).first()[0]
+    if mean_val:
+        df = df.na.fill({c: mean_val})
+
+# --- Create average salary ---
+df = df.withColumn("SALARY_AVG", ((col("SALARY_FROM") + col("SALARY_TO")) / 2))
+
+# --- Fill categorical columns with placeholder ---
+cat_cols = [
+    "MIN_EDULEVELS_NAME", "EMPLOYMENT_TYPE_NAME", "REMOTE_TYPE_NAME",
+    "STATE_NAME", "LOT_CAREER_AREA_NAME", "LIGHTCAST_SECTORS_NAME",
+    "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+]
+for c in cat_cols:
+    df = df.withColumn(c, when(col(c).isNull(), lit("unknown")).otherwise(col(c)))
+
+# --- Combine text columns into one 'text_features' column ---
+text_cols = [
+    "TITLE_RAW", "TITLE_CLEAN", "BODY",
+    "SKILLS_NAME", "COMMON_SKILLS_NAME", "SPECIALIZED_SKILLS_NAME",
+    "SOFTWARE_SKILLS_NAME", "LIGHTCAST_SECTORS_NAME",
+    "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
+]
+df = df.fillna("")  # fill text nulls with empty strings
+df = df.withColumn("text_features", concat_ws(" ", *[lower(regexp_replace(col(c), r"[^a-zA-Z0-9 ]", "")) for c in text_cols]))
+
+# --- Create binary label: 'requires_ai' ---
+ai_keywords = [
+    r"\bAI\b", r"\bML\b", r"\bLLM\b", r"\bNLP\b",
+    "artificial intelligence", "machine learning", "deep learning",
+    "computer vision", "generative", "gen ai", "chatgpt", r"gpt-\d+",
+    "transformer", "bert", "prompt engineer", "reinforcement learning"
+]
+ai_pattern = "|".join([f"(?i){k}" for k in ai_keywords])  # (?i) for case-insensitive regex
+df = df.withColumn("requires_ai", when(col("text_features").rlike(ai_pattern), lit(1)).otherwise(lit(0)))
+
+# --- Select relevant columns for modeling ---
+model_df = df.select(
+    "requires_ai", "text_features", "SALARY_AVG",
+    "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE",
+    "MIN_EDULEVELS_NAME", "EMPLOYMENT_TYPE_NAME",
+    "REMOTE_TYPE_NAME", "STATE_NAME", "LOT_CAREER_AREA_NAME"
+)
+
+# --- Optional: Drop duplicates and cache for faster reuse ---
+model_df = model_df.dropDuplicates().cache()
+
+# --- Show a few sample rows ---
+model_df.show(5, truncate=100)
+
+# --- Show AI vs non-AI job counts and percentage ---
+ai_counts = model_df.groupBy("requires_ai").count().toPandas()
+total = ai_counts["count"].sum()
+ai_counts["percentage"] = (ai_counts["count"] / total * 100).round(2)
+print(ai_counts)
+```
