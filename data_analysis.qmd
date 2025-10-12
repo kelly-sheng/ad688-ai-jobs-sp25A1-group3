@@ -86,7 +86,7 @@ text_series = (
     if text_cols else pd.Series([""] * len(df), index=df.index)
 )
 
-# ✅ FIXED list (no cut-off strings)
+# FIXED list (no cut-off strings)
 ai_terms = [
     "artificial intelligence","ai","machine learning","deep learning",
     "neural network","nlp","natural language","computer vision",
@@ -115,8 +115,6 @@ monthly = (
 
 monthly_plt = monthly.copy()
 monthly_plt.head(12)
-
-
 
 ```
 
@@ -155,7 +153,7 @@ The AI VS Non-AI Jobs graph hows two clear trends:
 
 - Non-AI jobs started much higher but declined between May and July before slightly recovering in August. By September, they still remained lower than at the start.
 
-In simple terms, while non-AI jobs remain larger in number, AI jobs are rising quickly, showing a shift in the job market toward AI-focused opportunities.
+In summary, there are still more Non-AI jobs than AI jobs in total; however, the number of available AI jobs is increasing rapidly. This transition indicates the shifting of the job market towards the AI-based roles.
 
 
 # Prep for monthly AI counts 
@@ -237,11 +235,11 @@ growth_df = ai_monthly.groupby(IND_COL).apply(growth_row).reset_index()
 MIN_TOTAL = 30
 growth_df = growth_df[growth_df["total"] >= MIN_TOTAL].dropna(subset=["growth_pct"])
 
-# pick top movers (you can adjust top_n)
+# pick top movers (adjust top_n)
 top_n = 12
 growth_top = growth_df.sort_values("growth_pct", ascending=False).head(top_n)
 
-# Save a copy if you want a table in the doc
+# Save a copy if want a table in the doc
 growth_top_rounded = growth_top.copy()
 growth_top_rounded["growth_pct"] = growth_top_rounded["growth_pct"].round(1)
 growth_top_rounded.head(top_n)
@@ -257,7 +255,7 @@ import os, re
 from textwrap import shorten
 import matplotlib.pyplot as plt
 
-# Use your existing industry column if defined; otherwise default:
+# Use existing industry column if defined; otherwise default:
 IND_COL = IND_COL if "IND_COL" in globals() else "NAICS_2022_6_NAME"
 
 def short_label(s: str) -> str:
@@ -309,10 +307,9 @@ plt.show()
 
 ```
 
+The chart shows that AI job postings are increasing quickly in many industries. The largest increases are in Offices of Holding Companies (about 373%) and Motor Vehicle Parts Manufacturing (about 331%). We also see significant growth in R&D (physical/engineering) (about 176%), Executive Search (about 160%), Computer & Peripheral Equipment (about 155%), and Temporary Help Services (about 149%). Other sectors like HR Consulting, Management Consulting, Wholesale Trade Agents, Pharmaceutical Preparation, Other Computer Related, and Unclassified categories enlarged by slightly more than 100% all together. The growth is mainly distributed among the different sectors, while only some industries exhibit the highest increases. 
 
-
-
-# Non-AI Job Posting Growth by Industry setup
+# Non-AI Job Posting Growth by Industry 
 ```{python}
 #| echo: true
 #| eval: true
@@ -322,7 +319,7 @@ import os, re
 import pandas as pd
 from textwrap import shorten
 
-assert "raw_df" in globals(), "raw_df must exist (your cleaned dataframe)."
+assert "raw_df" in globals(), "raw_df must exist (cleaned dataframe)."
 df = raw_df.copy()
 
 # Pick an industry-name column that exists
@@ -351,7 +348,7 @@ ai_pat = re.compile("|".join(AI_TERMS), flags=re.IGNORECASE)
 if "is_ai" not in df.columns:
     df["is_ai"] = df[TITLE_COL].astype(str).str.contains(ai_pat, na=False)
 
-# Use industries from your AI-growth visual if available; otherwise pick top 10 by AI postings last month
+# Use industries from  AI-growth visual if available; otherwise pick top 10 by AI postings last month
 if "growth_top" in globals():
     target_inds = [str(x) for x in growth_top[IND_COL].dropna().tolist()]
 else:
@@ -394,7 +391,6 @@ non_ai_growth_plot_df.head(10)  # preview table
 
 ```
 
-# Non-AI Job Posting Growth by Industry
 ```{python}
 #| echo: true
 #| eval: true
@@ -407,7 +403,7 @@ import matplotlib.pyplot as plt
 if "non_ai_growth_plot_df" not in globals():
     # Re-run a minimal rebuild using the same logic
     assert "raw_df" in globals(), "raw_df is required to rebuild plot data."
-    # You can just execute the prep cell above; keeping this here for resilience:
+    #  execute the prep cell above; keeping this here for resilience:
     # (We simply import the name if it exists; otherwise advise to run prep.)
     raise AssertionError("Run the prep chunk first to create non_ai_growth_plot_df.")
 
@@ -446,6 +442,14 @@ else:
     plt.show()
 
 ```
+
+The Non-AI job posting growth chart shows the following:
+
+- The biggest gains are in Research & Development (~153%) and Motor Vehicle Parts (~83%). Executive Search (~57%) and Computer/Peripheral Equipment (~38%) also grew well. Management Consulting (~20%) is up, while Offices of Holding Companies (~9%) and Temporary Help (~6%) show small growth.
+
+- A few areas are slipping: Wholesale Trade Agents & Brokers (~-23%), Other Computer-Related Services (~-15%), Pharmaceutical Prep (~-5%), and HR Consulting (~-3%) declined; Unclassified is flat.
+
+This means for us that non-AI roles are still growing, just not as fast as AI roles. The non-AI opportunities we want more of should be targeted to R&D labs, automotive suppliers, executive search firms, and hardware/peripherals. Outreach to these fields will guarantee more non-AI opportunities. The areas of wholesale, general computer, and pharma-related services, HR consulting would be where one could select with more discrimination since the demand for these practices is on the decline.
 
 # AI-powered roles vs non-ai roles salary prep
 ```{python}
@@ -527,7 +531,6 @@ ai_vs_trad_industry_salary.head(N)
 
 ```
 
-# AI-powered Roles Salaries vs. Non-AI Roles Salaries
 ```{python}
 #| echo: true
 #| eval: true
@@ -587,4 +590,21 @@ else:
     plt.show()
 
 ```
+
+In this graph, we compared pay for AI and non-AI roles across industries. In most of these sectors, AI jobs pay more; significant gaps show up in Administrative Management & General Services, Commercial Banking, Unclassified, and Food Manufacturing. A few places flip the pattern: Software Publishers, Offices of Certified Public Accountants, Health/Medical Insurance, and Computer Systems Design show higher pay for non-AI roles (or pay that is almost the same in Other Computer-Related Services). For our search, we should target AI roles in industries with clear premium pay, and be careful in the few sectors where AI pay trails non-AI; those roles may be more junior or support.
+
+# Market Takeaways from our EDA
+
+AI does not affect every field the same. From our EDA, the fields that use AI consulting, computer services, R&D, and parts of banking show rising postings and often higher pay, so jobs look safer there. In contrast, areas with flat or falling non-AI postings, wholesale trade agents, some general computer services, pharma prep, and HR consulting look less secure unless they adopt AI tools. Routine, repeat tasks are most at risk, while roles that mix tech and people skills (analysis, client work, project work) look safer.
+
+Looking across industries, we see growth where AI is being put to work: other computer-related services, management consulting, temporary help services, R&D, and commercial banking. Meanwhile, we see possible displacement or slowdown on the non-AI side in wholesale trade agents, parts of computer services, pharma prep, and HR consulting. In short, sectors leaning into AI grow; those that don’t may shrink or re-scope roles.
+
+Compared with traditional paths like mechanical engineering, farming, and retail, AI-powered roles are growing faster and usually pay more, according to our charts. Traditional fields still matter, but many tasks there now use AI (e.g., predictive maintenance in mechanical, precision ag in farming, demand forecasting in retail). People who add data and AI skills to their core trade tend to get better options and higher pay.
+
+Finally, we see new job titles emerging: AI/ML Engineer, MLOps/AI Ops, AI Product Manager, Prompt Engineer, Data/ML Analyst, AI Solutions Consultant, and AI Ethics/Governance, along with more analytics-heavy PM and consulting roles. Overall, where AI is adopted, jobs shift toward analysis, tools, and delivery, and hiring grows. Where AI is ignored, roles risk shrinking. Our best move is to build AI and delivery skills (CS basics, operations, project management) and target the growing sectors.
+
+
+
+
+
 
