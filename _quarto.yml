@@ -12,8 +12,8 @@ website:
         text: Exploratory Data Analysis
       - href: skill_gap_analysis.qmd
         text: Skill Gap Analysis
-      - href: ml_methods.qmd
-        text: ML Methods
+      - href: rf_regression.qmd
+        text: Random Forest Regression
       - href: KMeans_clustering_methods.qmd
         text: K-Means Clustering
 
