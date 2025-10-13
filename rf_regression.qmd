@@ -17,80 +17,135 @@ format:
     df-print: paged
 ---
 
-# Setup
 ```{python}
-# --- Setup ---
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import (
-    col, lower, concat_ws, when, mean as _mean, lit, regexp_replace, isnan
-)
+from pyspark.sql.functions import col, lit, concat_ws, lower, regexp_replace, when, mean as _mean
 from pyspark.sql.types import DoubleType
+from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
+from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml import Pipeline
+import pandas as pd
+import matplotlib.pyplot as plt
 
-spark = SparkSession.builder.appName("LightcastData").getOrCreate()
+# --- Start Spark ---
+spark = SparkSession.builder.appName("AI_Job_Comparison").getOrCreate()
 
-df = (spark.read.option("header", "true").option("inferSchema", "true").option("multiLine", "true").option("escape", "\"").csv("data/lightcast_job_postings.csv"))
+# --- Load data ---
+df = (spark.read.option("header", "true")
+        .option("inferSchema", "true")
+        .option("multiLine", "true")
+        .option("escape", "\"")
+        .csv("data/lightcast_job_postings.csv"))
 
-# --- Drop rows with too many NULLs (e.g., >50% missing) ---
-threshold = int(len(df.columns) * 0.5)
-df = df.dropna(thresh=threshold)
+# --- Create text features for AI labeling ---
+text_cols = ["TITLE_RAW", "TITLE_CLEAN", "BODY", "SKILLS_NAME",
+             "COMMON_SKILLS_NAME", "SPECIALIZED_SKILLS_NAME", 
+             "SOFTWARE_SKILLS_NAME"]
 
-# --- Fill missing numeric columns with median/mean ---
-numeric_cols = ["SALARY_FROM", "SALARY_TO", "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE"]
-for c in numeric_cols:
-    df = df.withColumn(c, col(c).cast(DoubleType()))
-    mean_val = df.select(_mean(col(c))).first()[0]
-    if mean_val:
-        df = df.na.fill({c: mean_val})
+df = df.fillna("")
+df = df.withColumn("text_features",
+                   concat_ws(" ", *[lower(regexp_replace(col(c), r"[^a-zA-Z0-9 ]", "")) for c in text_cols]))
 
-# --- Create average salary ---
-df = df.withColumn("SALARY_AVG", ((col("SALARY_FROM") + col("SALARY_TO")) / 2))
-
-# --- Fill categorical columns with placeholder ---
-cat_cols = [
-    "MIN_EDULEVELS_NAME", "EMPLOYMENT_TYPE_NAME", "REMOTE_TYPE_NAME",
-    "STATE_NAME", "LOT_CAREER_AREA_NAME", "LIGHTCAST_SECTORS_NAME",
-    "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
-]
-for c in cat_cols:
-    df = df.withColumn(c, when(col(c).isNull(), lit("unknown")).otherwise(col(c)))
-
-# --- Combine text columns into one 'text_features' column ---
-text_cols = [
-    "TITLE_RAW", "TITLE_CLEAN", "BODY",
-    "SKILLS_NAME", "COMMON_SKILLS_NAME", "SPECIALIZED_SKILLS_NAME",
-    "SOFTWARE_SKILLS_NAME", "LIGHTCAST_SECTORS_NAME",
-    "LOT_V6_SPECIALIZED_OCCUPATION_NAME"
-]
-df = df.fillna("")  # fill text nulls with empty strings
-df = df.withColumn("text_features", concat_ws(" ", *[lower(regexp_replace(col(c), r"[^a-zA-Z0-9 ]", "")) for c in text_cols]))
-
-# --- Create binary label: 'requires_ai' ---
+# --- AI job label ---
 ai_keywords = [
     r"\bAI\b", r"\bML\b", r"\bLLM\b", r"\bNLP\b",
     "artificial intelligence", "machine learning", "deep learning",
     "computer vision", "generative", "gen ai", "chatgpt", r"gpt-\d+",
     "transformer", "bert", "prompt engineer", "reinforcement learning"
 ]
-ai_pattern = "|".join([f"(?i){k}" for k in ai_keywords])  # (?i) for case-insensitive regex
+ai_pattern = "|".join([f"(?i){k}" for k in ai_keywords])
 df = df.withColumn("requires_ai", when(col("text_features").rlike(ai_pattern), lit(1)).otherwise(lit(0)))
 
-# --- Select relevant columns for modeling ---
-model_df = df.select(
-    "requires_ai", "text_features", "SALARY_AVG",
-    "MIN_YEARS_EXPERIENCE", "MAX_YEARS_EXPERIENCE",
-    "MIN_EDULEVELS_NAME", "EMPLOYMENT_TYPE_NAME",
-    "REMOTE_TYPE_NAME", "STATE_NAME", "LOT_CAREER_AREA_NAME"
+# --- Create average salary ---
+df = df.withColumn(
+    "SALARY_AVG",
+    when(col("SALARY") > 0, col("SALARY"))
+    .when(col("SALARY_FROM").isNotNull() & col("SALARY_TO").isNotNull(),
+          (col("SALARY_FROM"] + col("SALARY_TO")) / 2)
+    .when(col("SALARY_FROM").isNotNull(), col("SALARY_FROM"))
+    .when(col("SALARY_TO").isNotNull(), col("SALARY_TO"))
+    .otherwise(None)
 )
 
-# --- Optional: Drop duplicates and cache for faster reuse ---
-model_df = model_df.dropDuplicates().cache()
+# --- Handle education level ---
+df = df.withColumn("MIN_EDULEVELS", when(col("MIN_EDULEVELS") == 99, 0).otherwise(col("MIN_EDULEVELS")))
 
-# --- Show a few sample rows ---
-model_df.show(5, truncate=100)
+# --- Select relevant features ---
+model_df = df.select(
+    "requires_ai",
+    "SALARY_AVG",
+    "MIN_YEARS_EXPERIENCE",
+    "MIN_EDULEVELS",
+    "STATE",
+    "REMOTE_TYPE"
+)
 
-# --- Show AI vs non-AI job counts and percentage ---
-ai_counts = model_df.groupBy("requires_ai").count().toPandas()
-total = ai_counts["count"].sum()
-ai_counts["percentage"] = (ai_counts["count"] / total * 100).round(2)
-print(ai_counts)
+# --- Fill numeric nulls ---
+numeric_cols = ["SALARY_AVG", "MIN_YEARS_EXPERIENCE", "MIN_EDULEVELS"]
+for c in numeric_cols:
+    model_df = model_df.withColumn(c, col(c).cast(DoubleType()))
+    mean_val = model_df.select(_mean(col(c))).first()[0]
+    model_df = model_df.na.fill({c: mean_val})
+
+# --- Encode categorical variables ---
+categorical_cols = ["STATE", "REMOTE_TYPE"]
+indexers = [StringIndexer(inputCol=c, outputCol=f"{c}_IDX", handleInvalid="keep") for c in categorical_cols]
+encoders = [OneHotEncoder(inputCol=f"{c}_IDX", outputCol=f"{c}_VEC") for c in categorical_cols]
+
+# --- Assemble features ---
+assembler = VectorAssembler(
+    inputCols=["SALARY_AVG", "MIN_YEARS_EXPERIENCE", "MIN_EDULEVELS"] + [f"{c}_VEC" for c in categorical_cols],
+    outputCol="features"
+)
+
+# --- Random Forest classifier ---
+rf = RandomForestClassifier(featuresCol="features", labelCol="requires_ai", numTrees=50, maxDepth=5, seed=42)
+
+# --- Build pipeline ---
+pipeline = Pipeline(stages=indexers + encoders + [assembler, rf])
+
+# --- Split train/test ---
+train_df, test_df = model_df.randomSplit([0.8, 0.2], seed=42)
+
+# --- Train model ---
+rf_model = pipeline.fit(train_df)
+
+# --- Predict & evaluate ---
+predictions = rf_model.transform(test_df)
+evaluator = BinaryClassificationEvaluator(labelCol="requires_ai", metricName="areaUnderROC")
+roc_auc = evaluator.evaluate(predictions)
+print(f"ROC-AUC: {roc_auc:.3f}")
+
+# --- Feature importances ---
+rf_stage = rf_model.stages[-1]
+importances = rf_stage.featureImportances.toArray()
+feature_labels = assembler.getInputCols()
+importance_df = pd.DataFrame({"Feature": feature_labels, "Importance": importances}).sort_values("Importance", ascending=False)
+
+plt.figure(figsize=(8, 5))
+plt.barh(importance_df["Feature"], importance_df["Importance"])
+plt.xlabel("Importance")
+plt.title("Random Forest Feature Importances")
+plt.gca().invert_yaxis()
+plt.show()
 ```
+
+
+ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
+
+
+These variables were chosen because they are often the features that are of highest consideration to an applicant; their years of experience and education levels are barriers to entry, and the salary and occupation are desired outcomes. This Random Forest model provides valuable insight analyzing these four variables and how they relate to AI vs non-AI jobs.
+
+
+With around 0.49 importance, MIN_YEARS_EXPERIENCE is clearly the biggest predictor of whether a job is AI-related. This suggests that roles in your dataset likely require more years of experience than non-AI roles.
+
+SALARY_AVG – ~0.2 importance
+
+Salary also matters: higher-paying roles tend to skew AI, which makes sense given industry demand.
+
+LOT_SPECIALIZED_OCCUPATION & MIN_EDULEVELS – ~0.15 each
+
+Specialized occupation codes and minimum education levels are relevant, but less decisive.
+
+Certain roles or education thresholds correlate with AI jobs.
