@@ -26,6 +26,7 @@ from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml import Pipeline
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 # --- Start Spark ---
@@ -62,7 +63,7 @@ df = df.withColumn(
     "SALARY_AVG",
     when(col("SALARY") > 0, col("SALARY"))
     .when(col("SALARY_FROM").isNotNull() & col("SALARY_TO").isNotNull(),
-          (col("SALARY_FROM"] + col("SALARY_TO")) / 2)
+          (col("SALARY_FROM") + col("SALARY_TO")) / 2)
     .when(col("SALARY_FROM").isNotNull(), col("SALARY_FROM"))
     .when(col("SALARY_TO").isNotNull(), col("SALARY_TO"))
     .otherwise(None)
@@ -87,7 +88,9 @@ for c in numeric_cols:
     model_df = model_df.withColumn(c, col(c).cast(DoubleType()))
     mean_val = model_df.select(_mean(col(c))).first()[0]
     model_df = model_df.na.fill({c: mean_val})
+```
 
+```{python}
 # --- Encode categorical variables ---
 categorical_cols = ["STATE", "REMOTE_TYPE"]
 indexers = [StringIndexer(inputCol=c, outputCol=f"{c}_IDX", handleInvalid="keep") for c in categorical_cols]
@@ -95,7 +98,7 @@ encoders = [OneHotEncoder(inputCol=f"{c}_IDX", outputCol=f"{c}_VEC") for c in ca
 
 # --- Assemble features ---
 assembler = VectorAssembler(
-    inputCols=["SALARY_AVG", "MIN_YEARS_EXPERIENCE", "MIN_EDULEVELS"] + [f"{c}_VEC" for c in categorical_cols],
+    inputCols=numeric_cols + [f"{c}_VEC" for c in categorical_cols],
     outputCol="features"
 )
 
@@ -110,20 +113,55 @@ train_df, test_df = model_df.randomSplit([0.8, 0.2], seed=42)
 
 # --- Train model ---
 rf_model = pipeline.fit(train_df)
+```
 
+```{python}
 # --- Predict & evaluate ---
 predictions = rf_model.transform(test_df)
 evaluator = BinaryClassificationEvaluator(labelCol="requires_ai", metricName="areaUnderROC")
 roc_auc = evaluator.evaluate(predictions)
 print(f"ROC-AUC: {roc_auc:.3f}")
+```
+ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
 
-# --- Feature importances ---
+```{python}
+# --- Feature importances (aggregate categorical vectors) ---
 rf_stage = rf_model.stages[-1]
 importances = rf_stage.featureImportances.toArray()
-feature_labels = assembler.getInputCols()
-importance_df = pd.DataFrame({"Feature": feature_labels, "Importance": importances}).sort_values("Importance", ascending=False)
 
-plt.figure(figsize=(8, 5))
+# Get the sizes of one-hot encoded vectors
+ohe_stages = [s for s in rf_model.stages if isinstance(s, OneHotEncoder)]
+categorical_sizes = []
+for ohe in ohe_stages:
+    # Number of categories = size of metadata after encoding
+    categorical_sizes.append(len(ohe.getOutputCol() + "_metadata") if False else ohe.getOutputCols() if hasattr(ohe,'getOutputCols') else ohe.categorySizes[0] if hasattr(ohe,'categorySizes') else None)
+
+# Alternative simpler approach: we can get vector size from the first row of transformed vector
+features_vec = rf_model.transform(test_df).select("features").first()[0]
+vector_size = len(features_vec)
+
+# Approximate: numeric features = 1, categorical features = remaining size divided equally
+num_numeric = len(numeric_cols)
+num_categorical = len(categorical_cols)
+categorical_vector_sizes = [(vector_size - num_numeric)//num_categorical]*num_categorical
+
+feature_sizes = [1]*num_numeric + categorical_vector_sizes
+feature_names = numeric_cols + categorical_cols
+
+# Aggregate importances
+agg_importances = []
+start = 0
+for size in feature_sizes:
+    agg_importances.append(np.sum(importances[start:start+size]))
+    start += size
+
+# --- Create DataFrame & plot ---
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": agg_importances
+}).sort_values("Importance", ascending=False)
+
+plt.figure(figsize=(8,5))
 plt.barh(importance_df["Feature"], importance_df["Importance"])
 plt.xlabel("Importance")
 plt.title("Random Forest Feature Importances")
@@ -131,21 +169,40 @@ plt.gca().invert_yaxis()
 plt.show()
 ```
 
+```{python}
+from pyspark.ml.functions import vector_to_array
 
-ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
+# --- Create sample job listings ---
+sample_jobs = [
+    Row(MIN_YEARS_EXPERIENCE=15.0, SALARY_AVG=300000.0, STATE=36, MIN_EDULEVELS=4, REMOTE_TYPE=1),
+    Row(MIN_YEARS_EXPERIENCE=2.0, SALARY_AVG=75000.0, STATE=10, MIN_EDULEVELS=0, REMOTE_TYPE=0),
+    Row(MIN_YEARS_EXPERIENCE=3.0, SALARY_AVG=95000.0, STATE=38, MIN_EDULEVELS=1, REMOTE_TYPE=1)
+]
 
+sample_df = spark.createDataFrame(sample_jobs)
 
-These variables were chosen because they are often the features that are of highest consideration to an applicant; their years of experience and education levels are barriers to entry, and the salary and occupation are desired outcomes. This Random Forest model provides valuable insight analyzing these four variables and how they relate to AI vs non-AI jobs.
+numeric_cols = ["MIN_YEARS_EXPERIENCE", "SALARY_AVG", "MIN_EDULEVELS", "STATE", "REMOTE_TYPE"]
+for c in numeric_cols:
+    sample_df = sample_df.withColumn(c, col(c).cast(DoubleType()))
 
+# --- Transform the samples through the trained pipeline ---
+predictions = rf_model.transform(sample_df)
+predictions_array = predictions.withColumn("prob_array", vector_to_array(col("probability")))
 
-With around 0.49 importance, MIN_YEARS_EXPERIENCE is clearly the biggest predictor of whether a job is AI-related. This suggests that roles in your dataset likely require more years of experience than non-AI roles.
+# --- Extract probability of AI class and display results ---
+results = predictions_array.select(
+    "MIN_YEARS_EXPERIENCE",
+    "SALARY_AVG",
+    "STATE",
+    "MIN_EDULEVELS",
+    "REMOTE_TYPE",
+    col("prob_array")[1].alias("AI_prob"),
+    "prediction"
+)
 
-SALARY_AVG – ~0.2 importance
+results.show(truncate=False)
+```
 
-Salary also matters: higher-paying roles tend to skew AI, which makes sense given industry demand.
+This analysis used a Random Forest model to distinguish AI from non-AI job postings based on five features: minimum years of experience, average salary, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, offer higher compensation, demand advanced degrees, and are concentrated in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience and salary were the most influential factors, followed by state, education, and remote type, reflecting the expected patterns of AI job characteristics.
 
-LOT_SPECIALIZED_OCCUPATION & MIN_EDULEVELS – ~0.15 each
-
-Specialized occupation codes and minimum education levels are relevant, but less decisive.
-
-Certain roles or education thresholds correlate with AI jobs.
+However, when using this model to predict whether or not a posting would be AI or not, we encountered several limitations that may explain its underperformance. Treating state as a numeric variable may not fully capture the categorical differences between regions, and the model’s majority-vote mechanism can classify borderline AI roles as non-AI, especially when AI postings are underrepresented in the training data. Additional factors such as inconsistent labeling of AI roles, limited sample size, and high variance in salary or education requirements could further reduce predictive accuracy. Despite these challenges, the analysis highlights which features are most informative for distinguishing AI roles and provides a foundation for future models.
