@@ -310,6 +310,7 @@ print("Explained variance (2 comps):", svd.explained_variance_ratio_.sum())
 
 ```
 
+
 # Single Cluster Scatter
 ```{python}
 #| echo: true
@@ -329,6 +330,9 @@ plt.savefig("output/kmeans_svd_scatter.png", dpi=180, bbox_inches="tight")
 plt.show()
 
 ```
+
+Under the recommendation of the Kmeans Elbow and Silhouette measures, four clear segments have emerged. C0 (EA / SAP–Oracle Consulting, Sr) comprises enterprise solution owners and senior consultants focused on ERP/CRM integrations, domain architecture, and delivery roadmaps. C1 (Data / BI Analysts) is the high‑volume analytics backbone handling reporting, dashboards, and KPI/ad‑hoc analysis at mid‑career compensation. C2 (Enterprise / Cloud Architects) is the premium niche cluster with principals and leads who own cloud platforms, reliability/security, and cross‑team technical direction, and therefore command the highest pay. C3 (Data / BI Analysts, consulting tilt) mirrors C1’s skills but skews toward consulting and remote work and shows the highest AI‑keyword incidence, reflecting applied‑AI enablement inside analytics teams. Overall, analyst demand drives scale (C1/C3), enterprise solutioning provides the integration bench (C0), and cross‑platform leadership remains scarce and premium (C2).
+
 # Reference table
 ```{python}
 #| echo: true
@@ -497,6 +501,6 @@ else:
 
 ```
 
-# Analysis
+# Kmeans Summary
 The results point to a job market organized around four role families with one noticeably premium niche, and they suggest that compensation and hiring dynamics are driven more by seniority and enterprise scope than by AI keywords. Cluster C1 (Analyst & BI Core) supplies most of the volume (≈56%), centered on titles like data analyst, business analyst, and BI/analytics; it anchors day‑to‑day decision support and sits near the mid‑$110k median. Cluster C3 (Data Analyst & BI — Mixed/Remote, AI‑skewed) is a smaller analyst cohort with a stronger remote profile and the highest AI‑keyword incidence; it reflects applied‑AI enablement inside analytics teams and also prices around the mid‑$110k band. Cluster C0 (Enterprise Architecture & Solutions) blends architect/enterprise/SAP‑Oracle/consultant language and tilts toward cross‑system solution ownership—ERP/CRM modernization, integration roadmaps, and domain architecture—with compensation likewise clustering near the mid‑$110k range. Finally, Cluster C2 (Senior Enterprise/Cloud Leadership) is the small but premium niche (~7%) that stands apart both visually and economically, with a roughly $175k median in the provided charts; employers reward systems ownership, architectural accountability, reliability/security considerations, and cross‑team leadership, even when titles don’t carry explicit AI keywords. Meanwhile, AI‑tagged titles are increasing from a small base and are unevenly distributed—most common in C3 and least common in C2—yet the salary premium does not follow that AI gradient, reinforcing that pay aligns with role family and enterprise scope rather than AI labeling. Industry composition across all clusters is anchored in Professional, Scientific & Technical Services, with steady contributions from Administrative & Support, Finance & Insurance, and Manufacturing. The fastest AI growth is occurring outside pure software—holding companies, motor‑vehicle parts, R&D services, executive search, and temporary help—signaling diffusion of AI demand into corporate centers and industrial supply chains. In practical terms, this calls for sourcing strategies that prioritize C2 senior enterprise/cloud architects where supply is tight and compensation pressure is persistent; upskilling programs that pair C1/C3 BI foundations with applied‑AI tools to raise placement yield; playbooks tailored to emerging AI‑adopting sectors; and compensation and messaging calibrated to cluster archetype and enterprise impact rather than to AI buzzwords alone. Altogether, the evidence suggests a hybrid hiring mix ahead: steady growth of applied‑AI roles embedded in analytics workflows (C1/C3), alongside continued scarcity and premium pricing for cross‑functional platform leaders (C2) who can translate strategy into architecture and delivery, with C0 providing the enterprise solutions bench that stitches systems and governance together.
 
