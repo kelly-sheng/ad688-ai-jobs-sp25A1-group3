@@ -24,7 +24,7 @@ format:
 
 {{< include KMeans_clustering_methods.qmd >}}
 
-{{< include ml_methods.qmd >}}
+{{< include rf_regression.qmd >}}
 
 # Conclusion 
 
