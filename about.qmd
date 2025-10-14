@@ -1,5 +1,15 @@
 ---
 title: "About"
+subtitle: Team Members
+title-block-banner: "#008f7a"
 ---
 
-Short Bio and Career goals
+# Kelly Sheng
+
+# Sabrina Minaya Vasquez
+
+Sabrina Minaya earned a Bachelor's degree in Computer Science at Boston University. She grew up with her father who is obsessed with computers and their innovation. At the age of 19, Sabrina's father showed her how he was developing a sales program for a liquor store. She was fascinated by how he created a program that can search items, do the inventory of any item, calculate the total amount sold by the store, etc. The fact that Sabrina's father created something so amazing inspired her to go into technology.
+
+She's currently pursuing a Master's degree in Applied Business Analytics. Sabrina is gaining a number of skills through the program, such as statistical analysis, data mining, machine learning, data visualization, and quantitative and qualitative decision-making.
+
+# Mackenzie Howard

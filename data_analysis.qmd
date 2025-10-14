@@ -1,20 +1,7 @@
 ---
-title: "Data Analysis"
+title: "Exploratory Data Analysis"
 subtitle: "Comprehensive Data Cleaning & Exploratory Analysis of Job Market Trends"
-author:
-  - name: Kelly, Sabrina, Makenzie
-    affiliations:
-      - id: bu
-        name: Boston University
-        city: Boston
-        state: MA
-bibliography: references.bib
-csl: csl/econometrica.csl
-format: 
-  html:
-    toc: true
-    number-sections: true
-    df-print: paged
+title-block-banner: "#008f7a"
 ---
 
 # Loading Libraries and Data

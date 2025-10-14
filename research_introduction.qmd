@@ -1,13 +1,9 @@
 ---
 title: "AI vs. Non-AI Careers"
-author: "Group 3"
-date: today
-format: 
-  html:
-    bibliography: references.bib
-    csl: csl/econometrica.csl
-    toc: true
+subtitle: "Introduction, Research Rationale, and Literature Review"
+title-block-banner: "#008f7a"
 ---
+
 
 # Introduction
 We live in a time when artificial intelligence (AI) is changing the way people work. Across industries, tasks that were once done by humans are being automated, while new opportunities are appearing that require different skills. In 2024, this topic is especially important because AI tools are no longer limited to technology companies, they are now widely used in healthcare, education, energy, retail, and many other sectors. Understanding how AI affects the job market helps prepare for shifts in employment, salary trends, and the creation of new professions.

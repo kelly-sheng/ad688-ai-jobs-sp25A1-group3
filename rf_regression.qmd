@@ -1,20 +1,7 @@
 ---
 title: "Random Forest Regression"
 subtitle: "Predicting AI Expectation in Job Roles"
-author:
-  - name: Kelly, Sabrina, Makenzie
-    affiliations:
-      - id: bu
-        name: Boston University
-        city: Boston
-        state: MA
-bibliography: references.bib
-csl: csl/econometrica.csl
-format: 
-  html:
-    toc: true
-    number-sections: true
-    df-print: paged
+title-block-banner: "#008f7a"
 ---
 
 ```{python}
@@ -202,6 +189,8 @@ results = predictions_array.select(
 
 results.show(truncate=False)
 ```
+
+# Random Forest Regression Summary
 
 This analysis used a Random Forest model to distinguish AI from non-AI job postings based on five features: minimum years of experience, average salary, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, offer higher compensation, demand advanced degrees, and are concentrated in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience and salary were the most influential factors, followed by state, education, and remote type, reflecting the expected patterns of AI job characteristics.
 
