@@ -211,7 +211,7 @@ def phrase_level(text):
 
 phrase_level_series = text_all.apply(phrase_level)
 
-# Explode one row per (posting, skill), keep only Top 10 skills
+# Explode one row per (posting, skill), keep only Top 20 skills
 exploded = pd.DataFrame({
     "SKILLS_LIST": raw_df["SKILLS_NAME"],
     "years_level": years_level,
@@ -284,7 +284,7 @@ import matplotlib.pyplot as plt
 
 plt.figure(figsize=(12, 6))
 sns.heatmap(comparison_df_dd, annot=True, cmap="YlGnBu", linewidths=0.5, vmin=0, vmax=5)
-plt.title("Team vs. Industry Expertise Demand (Top 10 Skills) — Data-Driven Targets")
+plt.title("Team vs. Industry Expertise Demand (Top 20 Skills) — Data-Driven Targets")
 plt.yticks(rotation=0)
 plt.tight_layout()
 plt.savefig("output/team_vs_Industry_expertise_demand_skills_heatmap.png", dpi=300)
