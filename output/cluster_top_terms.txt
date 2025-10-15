@@ -1,12 +1,12 @@
 Cluster 0 — top terms:
-architect, data, analyst, sap, enterprise, consultant, data analyst, enterprise architect, senior, lead, architect cleared, cleared, sr, business, oracle
+architect, enterprise, sap, consultant, enterprise architect, analyst, data, oracle, senior, data analyst, business, principal, functional, lead, solution
 
 Cluster 1 — top terms:
-analyst, data, data analyst, senior, consultant, business, sap, analytics, intelligence, architect, business intelligence, enterprise, oracle, intelligence analyst, sr
+analyst, data, data analyst, business, senior, consultant, sap, analytics, intelligence, architect, business intelligence, enterprise, oracle, senior data, intelligence analyst
 
 Cluster 2 — top terms:
-analyst, data, data analyst, consultant, sap, senior, architect, business, enterprise, oracle, analytics, sr, intelligence, business intelligence, functional
+architect, enterprise, enterprise architect, oracle, sap, data, lead, manager, senior, cloud, analytics, consultant, analyst, engineer, principal
 
 Cluster 3 — top terms:
-architect, enterprise, enterprise architect, sap, consultant, oracle, data, analyst, senior, lead, principal, business, data analyst, cloud, solution
+analyst, data, data analyst, consultant, sap, senior, business, architect, enterprise, oracle, analytics, sr, intelligence, business intelligence, remote
 

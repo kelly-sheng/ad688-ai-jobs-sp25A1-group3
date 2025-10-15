@@ -1,5 +1,5 @@
 cluster,cluster_name,postings,ai_share_pct,median_salary
-0,Cluster 0,1673,0.9,136400.0
-1,Cluster 1,44869,1.0,97250.0
-2,Cluster 2,12657,0.7,103500.0
-3,Cluster 3,13299,1.1,162500.0
+0,Cluster 0,9190,0.6,116300.0
+1,Cluster 1,42435,1.1,116300.0
+2,Cluster 2,5550,2.0,175000.0
+3,Cluster 3,12023,0.7,116300.0
