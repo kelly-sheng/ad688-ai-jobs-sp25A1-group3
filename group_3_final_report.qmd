@@ -34,9 +34,9 @@ reference-section-title: "References"
 
 {{< include KMeans_clustering_methods.qmd >}}
 
-# Random Forest Regression 
+# Logistic Regression 
 
-{{< include rf_regression.qmd >}}
+{{< include lr_regression.qmd >}}
 
 
 # Conclusion 
