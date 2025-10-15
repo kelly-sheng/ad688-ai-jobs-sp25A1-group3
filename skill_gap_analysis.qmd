@@ -1,3 +1,8 @@
+---
+title: "Skill Gap Analysis"
+subtitle: "Compare the skills required in IT job postings against the actual skills of group members to identify knowledge gaps and areas for improvement"
+title-block-banner: "#008f7a"
+---
 
 # Loading Libraries and Data
 ```{python}

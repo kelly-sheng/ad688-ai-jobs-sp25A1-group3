@@ -1,3 +1,8 @@
+---
+title: "Exploratory Data Analysis"
+subtitle: "Comprehensive Data Cleaning & Exploratory Analysis of Job Market Trends"
+title-block-banner: "#008f7a"
+---
 
 
 # Loading Libraries and Data

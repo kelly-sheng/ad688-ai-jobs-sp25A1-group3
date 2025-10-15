@@ -1,3 +1,10 @@
+---
+title: "Logistic Regression"
+subtitle: "Predicting AI Expectation in Job Roles"
+title-block-banner: "#008f7a"
+---
+
+
 
 ```{python}
 from pyspark.sql import SparkSession, Row
@@ -157,6 +164,7 @@ plt.title("Logistic Regression Feature Importances (mean per categorical vector)
 plt.gca().invert_yaxis()
 plt.show()
 ```
+
 ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
 
 ```{python}
@@ -191,7 +199,17 @@ results = predictions_array.select(
     "prediction"
 )
 
-results.show(truncate=False)
+#results.show(truncate=False)
+# ---------- Doc-friendly table (no changes to model/pipeline) ----------
+pdf = results.toPandas()
+
+# Light formatting
+pdf["AI_prob"] = pdf["AI_prob"].round(3)                    # 0.000–1.000
+pdf["MIN_YEARS_EXPERIENCE"] = pdf["MIN_YEARS_EXPERIENCE"].round(1)
+pdf["MIN_EDULEVELS"] = pdf["MIN_EDULEVELS"].round(1)
+pdf["SALARY_AVG"] = pdf["SALARY_AVG"].map(lambda x: f"${x:,.0f}")  # $300,000
+
+print(pdf.to_string(index=False))
 ```
 
 # Logistic Regression Summary
