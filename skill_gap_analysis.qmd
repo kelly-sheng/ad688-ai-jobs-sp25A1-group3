@@ -1,8 +1,3 @@
----
-title: "Skill Gap Analysis"
-subtitle: "Compare the skills required in IT job postings against the actual skills of group members to identify knowledge gaps and areas for improvement"
-title-block-banner: "#008f7a"
----
 
 # Loading Libraries and Data
 ```{python}
@@ -249,45 +244,80 @@ expected_per_skill
 
 ## Team Skills Vs. Industry Requiments 
 ```{python}
-# If df_skills already exists, this will use it; else create a minimal placeholder
-if "df_skills" not in globals():
-    df_skills = pd.DataFrame({
-        "Name": ["Kel","Mak","Maria"],
-        **{s: [2,2,2] for s in top_skills} 
-    }).set_index("Name")
+import pandas as pd
+import numpy as np
 
-# Make sure all top_skills are present as numeric 0–5
-for s in top_skills:
-    if s not in df_skills.columns:
-        df_skills[s] = 0
+# --- 0) Preconditions: you already have ---
+# df_skills (index=Name, columns include your top_skills)
+# top_skills (list of skills to compare)
+# expected_per_skill (Series: index=skills, values=industry target 1–5)
 
+# --- 1) Ensure apples-to-apples (only top_skills) ---
 df_team_top10 = (
-    df_skills[top_skills]
-      .apply(pd.to_numeric, errors="coerce")
-      .fillna(0).clip(0,5)
+    df_skills.reindex(columns=top_skills, fill_value=0)
+             .apply(pd.to_numeric, errors="coerce")
+             .fillna(0).clip(0,5)
 )
 
-# Build comparison frame
-industry_expectations_dd = pd.DataFrame(
-    [expected_per_skill.values],
-    index=["Industry Expectation (Data-Driven)"],
-    columns=expected_per_skill.index
-)
-comparison_df_dd = pd.concat([df_team_top10, industry_expectations_dd])
-comparison_df_dd
+# --- 2) Build tidy comparison table ---
+team_avg = df_team_top10.mean(axis=0)
+target   = expected_per_skill.reindex(top_skills).astype(float)
+gap      = (target - team_avg)
+
+# Order columns: Skill, each person…, Team Avg, Target, Gap
+members = df_team_top10.index.tolist()
+rows = []
+for skill in top_skills:
+    row = {
+        "Skill": skill,
+        **{name: float(df_team_top10.loc[name, skill]) for name in members},
+        "Team Avg": round(float(team_avg[skill]), 2),
+        "Target":   round(float(target[skill]), 2) if pd.notna(target[skill]) else np.nan,
+        "Gap (Target−Avg)": round(float(gap[skill]), 2) if pd.notna(gap[skill]) else np.nan,
+    }
+    rows.append(row)
+
+comparison_table = pd.DataFrame(rows)
+
+# Sort by biggest gap (needs first)
+comparison_table = comparison_table.sort_values("Gap (Target−Avg)", ascending=False, na_position="last").reset_index(drop=True)
+
+# Nice rounding for member columns too
+for name in members:
+    comparison_table[name] = comparison_table[name].round(2)
+
+comparison_table
 
 ```
 
 ```{python}
+import os
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-plt.figure(figsize=(12, 6))
-sns.heatmap(comparison_df_dd, annot=True, cmap="YlGnBu", linewidths=0.5, vmin=0, vmax=5)
-plt.title("Team vs. Industry Expertise Demand (Top 20 Skills) — Data-Driven Targets")
+# Pick which columns to plot (only numbers!)
+members = df_team_top10.index.tolist()  
+numeric_cols = members + ["Team Avg", "Target"]  
+
+#  Make a numeric matrix indexed by Skill
+heatmap_df = (
+    comparison_table
+      .set_index("Skill")[numeric_cols]
+      .apply(pd.to_numeric, errors="coerce")
+)
+
+# 3) Plot
+os.makedirs("output", exist_ok=True)
+plt.figure(figsize=(12, max(6, 0.45*len(heatmap_df))))  # grow height if many skills
+sns.heatmap(
+    heatmap_df, annot=True, fmt=".2f",
+    cmap="YlGnBu", linewidths=0.5, vmin=0, vmax=5
+)
+plt.title("Team vs. Industry Expertise Demand — Top Skills (0–5)")
+plt.xticks(rotation=45, ha="right")
 plt.yticks(rotation=0)
 plt.tight_layout()
-plt.savefig("output/team_vs_Industry_expertise_demand_skills_heatmap.png", dpi=300)
+plt.savefig("output/team_vs_industry_expertise_heatmap.png", dpi=300)
 plt.show()
 plt.close()
 

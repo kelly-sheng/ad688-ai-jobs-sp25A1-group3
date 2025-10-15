@@ -1,9 +1,3 @@
----
-title: "KMeans Clustering"
-subtitle: "Applying K-Means to Uncover Patterns in Job Market Data"
-title-block-banner: "#008f7a"
----
-
 # Kmeans Clustering Setup
 
 ```{python}
