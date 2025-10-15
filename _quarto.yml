@@ -6,7 +6,7 @@ project:
         - data_analysis.qmd
         - skill_gap_analysis.qmd
         - KMeans_clustering_methods.qmd
-        - rf_regression.qmd
+        - lr_regression.qmd
 website:
   title: "AI vs. Non-AI Careers"
   navbar:

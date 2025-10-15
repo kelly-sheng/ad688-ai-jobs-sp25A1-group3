@@ -155,6 +155,7 @@ plt.barh(importance_df["Feature"], importance_df["Importance"])
 plt.xlabel("Mean Absolute Coefficient")
 plt.title("Logistic Regression Feature Importances (mean per categorical vector)")
 plt.gca().invert_yaxis()
+plt.savefig("output/logistic_regression.png", dpi=200, bbox_inches="tight")
 plt.show()
 ```
 ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
