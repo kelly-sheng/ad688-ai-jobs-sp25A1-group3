@@ -23,8 +23,8 @@ website:
         text: Skill Gap Analysis
       - href: KMeans_clustering_methods.qmd
         text: K-Means Clustering
-      - href: rf_regression.qmd
-        text: Random Forest Regression
+      - href: lr_regression.qmd
+        text: Logistical Regression
       
 
 bibliography: references.bib
