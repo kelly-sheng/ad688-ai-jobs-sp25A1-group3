@@ -1,21 +1,5 @@
 ---
 title: "About"
-subtitle: Team Members
-title-block-banner: "#008f7a"
 ---
 
-# Kelly Sheng
-
-Kelly Sheng graduated in 2021 from New York University with a Bachelor's degree in Music Business. Her interest in data analytics began when she was tasked with improving efficiencies at her influencer marketing role, at which point she discovered the endless amount of insights that are available when one knows how to work with data.
-
-Kelly now works in performance marketing and is in her final semester at Boston University, preparing to graduate with a Master's degree in Applied Business Analytics. She hopes to use the learnings she has gained along the way to further improve the service she can provide to her clients.
-
-# Sabrina Minaya Vasquez
-
-Sabrina Minaya earned a Bachelor's degree in Computer Science at Boston University. She grew up with her father who is obsessed with computers and their innovation. At the age of 19, Sabrina's father showed her how he was developing a sales program for a liquor store. She was fascinated by how he created a program that can search items, do the inventory of any item, calculate the total amount sold by the store, etc. The fact that Sabrina's father created something so amazing inspired her to go into technology.
-
-She's currently pursuing a Master's degree in Applied Business Analytics. Sabrina is gaining a number of skills through the program, such as statistical analysis, data mining, machine learning, data visualization, and quantitative and qualitative decision-making.
-
-# Mackenzie Howard
-
- Mackenzie have been working in the travel industry as a business development manager for the last 4.5 years. She create business cases, pricing analyses, travel policy structuring, and have extensive experience in forecasting. Mackenzie is hoping to leverage her Master’s degree to help her move into a more strategic, problem-solving, and data-oriented account management position within aviation.
+Short Bio and Career goals
