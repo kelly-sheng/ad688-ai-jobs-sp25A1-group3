@@ -23,7 +23,7 @@ website:
       - href: KMeans_clustering_methods.qmd
         text: K-Means Clustering
       - href: rf_regression.qmd
-        text: Random Forest Regression
+        text: Logistic Regression
       
 
 bibliography: references.bib

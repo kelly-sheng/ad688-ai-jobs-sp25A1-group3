@@ -34,10 +34,10 @@ reference-section-title: "References"
 
 {{< include KMeans_clustering_methods.qmd >}}
 
-# Random Forest Regression 
+# Logistic Regression 
 
 {{< include rf_regression.qmd >}}
 
 
 # Conclusion 
-Overall, the EDA shows AI roles are growing across many industries and usually pay more, especially in computer services, consulting, R&D, and parts of banking. From the skill-gap work, we’re strong in communication, problem-solving, SQL/Tableau, and finance basics. Still, we’re light on computer-science basics, operations, project management, business requirements, and some SAP. In contrast, some non-AI service areas are flat or down. K-means says the market clusters into: (1) core analyst/BI roles (most volume), (2) analyst/BI with more AI and remote, (3) enterprise architecture/solutions, and (4) senior cloud/enterprise leadership (small but high pay). Pay tracks seniority and scope, not just “AI” labels. The random-forest check lines up: years of experience and salary are the strongest signals for AI-type roles, with education and location also mattering. Put together, the market rewards applied AI inside analytics teams now, and enterprise/platform leadership later
+Overall, the EDA shows AI roles are growing across many industries and usually pay more, especially in computer services, consulting, R&D, and parts of banking. From the skill-gap work, we’re strong in communication, problem-solving, SQL/Tableau, and finance basics. Still, we’re light on computer-science basics, operations, project management, business requirements, and some SAP. In contrast, some non-AI service areas are flat or down. K-means says the market clusters into: (1) core analyst/BI roles (most volume), (2) analyst/BI with more AI and remote, (3) enterprise architecture/solutions, and (4) senior cloud/enterprise leadership (small but high pay). Pay tracks seniority and scope, not just “AI” labels. The logistic regression check lines up: years of experience and salary are the strongest signals for AI-type roles, with education and location also mattering. Put together, the market rewards applied AI inside analytics teams now, and enterprise/platform leadership later
