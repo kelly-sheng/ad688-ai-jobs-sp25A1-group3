@@ -9,7 +9,7 @@
 <meta name="author" content="Kelly, Sabrina, Makenzie">
 <meta name="dcterms.date" content="2025-10-15">
 
-<title>Exploratory Data Analysis – AI vs.&nbsp;Non-AI Careers</title>
+<title>Loading Libraries and Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -105,12 +105,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner {
-        background: #008f7a;
-      }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -158,8 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">K-Means Clustering</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rf_regression.html"> 
-<span class="menu-text">Logistic Regression</span></a>
+    <a class="nav-link" href="./lr_regression.html"> 
+<span class="menu-text">Logistical Regression</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -172,8 +166,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Exploratory Data Analysis</h1>
-            <p class="subtitle lead">Comprehensive Data Cleaning &amp; Exploratory Analysis of Job Market Trends</p>
+      <h1 class="title">Loading Libraries and Data</h1>
+            <p class="subtitle lead">Final Report</p>
                       </div>
   </div>
     
@@ -219,15 +213,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-libraries-and-data" id="toc-loading-libraries-and-data" class="nav-link active" data-scroll-target="#loading-libraries-and-data"><span class="header-section-number">1</span> Loading Libraries and Data</a></li>
-  <li><a href="#cleaning-data" id="toc-cleaning-data" class="nav-link" data-scroll-target="#cleaning-data"><span class="header-section-number">2</span> Cleaning Data</a></li>
-  <li><a href="#plot-setup-for-ai-vs-non-ai-job-posting-count" id="toc-plot-setup-for-ai-vs-non-ai-job-posting-count" class="nav-link" data-scroll-target="#plot-setup-for-ai-vs-non-ai-job-posting-count"><span class="header-section-number">3</span> Plot setup for AI vs Non-AI job posting count</a></li>
-  <li><a href="#job-postings-for-ai-vs-non-ai-jobs" id="toc-job-postings-for-ai-vs-non-ai-jobs" class="nav-link" data-scroll-target="#job-postings-for-ai-vs-non-ai-jobs"><span class="header-section-number">4</span> Job Postings for AI vs Non-AI Jobs</a></li>
-  <li><a href="#prep-for-monthly-ai-counts" id="toc-prep-for-monthly-ai-counts" class="nav-link" data-scroll-target="#prep-for-monthly-ai-counts"><span class="header-section-number">5</span> Prep for monthly AI counts</a></li>
-  <li><a href="#ai-driven-job-growth-by-industry" id="toc-ai-driven-job-growth-by-industry" class="nav-link" data-scroll-target="#ai-driven-job-growth-by-industry"><span class="header-section-number">6</span> AI-Driven Job Growth by Industry</a></li>
-  <li><a href="#non-ai-job-posting-growth-by-industry" id="toc-non-ai-job-posting-growth-by-industry" class="nav-link" data-scroll-target="#non-ai-job-posting-growth-by-industry"><span class="header-section-number">7</span> Non-AI Job Posting Growth by Industry</a></li>
-  <li><a href="#ai-powered-roles-vs-non-ai-roles-salary-prep" id="toc-ai-powered-roles-vs-non-ai-roles-salary-prep" class="nav-link" data-scroll-target="#ai-powered-roles-vs-non-ai-roles-salary-prep"><span class="header-section-number">8</span> AI-powered roles vs non-ai roles salary prep</a></li>
-  <li><a href="#market-takeaways-from-our-eda" id="toc-market-takeaways-from-our-eda" class="nav-link" data-scroll-target="#market-takeaways-from-our-eda"><span class="header-section-number">9</span> Market Takeaways from our EDA</a></li>
+  <li><a href="#cleaning-data" id="toc-cleaning-data" class="nav-link active" data-scroll-target="#cleaning-data"><span class="header-section-number">1</span> Cleaning Data</a></li>
+  <li><a href="#plot-setup-for-ai-vs-non-ai-job-posting-count" id="toc-plot-setup-for-ai-vs-non-ai-job-posting-count" class="nav-link" data-scroll-target="#plot-setup-for-ai-vs-non-ai-job-posting-count"><span class="header-section-number">2</span> Plot setup for AI vs Non-AI job posting count</a></li>
+  <li><a href="#job-postings-for-ai-vs-non-ai-jobs" id="toc-job-postings-for-ai-vs-non-ai-jobs" class="nav-link" data-scroll-target="#job-postings-for-ai-vs-non-ai-jobs"><span class="header-section-number">3</span> Job Postings for AI vs Non-AI Jobs</a></li>
+  <li><a href="#prep-for-monthly-ai-counts" id="toc-prep-for-monthly-ai-counts" class="nav-link" data-scroll-target="#prep-for-monthly-ai-counts"><span class="header-section-number">4</span> Prep for monthly AI counts</a></li>
+  <li><a href="#ai-driven-job-growth-by-industry" id="toc-ai-driven-job-growth-by-industry" class="nav-link" data-scroll-target="#ai-driven-job-growth-by-industry"><span class="header-section-number">5</span> AI-Driven Job Growth by Industry</a></li>
+  <li><a href="#non-ai-job-posting-growth-by-industry" id="toc-non-ai-job-posting-growth-by-industry" class="nav-link" data-scroll-target="#non-ai-job-posting-growth-by-industry"><span class="header-section-number">6</span> Non-AI Job Posting Growth by Industry</a></li>
+  <li><a href="#ai-powered-roles-vs-non-ai-roles-salary-prep" id="toc-ai-powered-roles-vs-non-ai-roles-salary-prep" class="nav-link" data-scroll-target="#ai-powered-roles-vs-non-ai-roles-salary-prep"><span class="header-section-number">7</span> AI-powered roles vs non-ai roles salary prep</a></li>
+  <li><a href="#market-takeaways-from-our-eda" id="toc-market-takeaways-from-our-eda" class="nav-link" data-scroll-target="#market-takeaways-from-our-eda"><span class="header-section-number">8</span> Market Takeaways from our EDA</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="data_analysis.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
     </div>
@@ -238,9 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="loading-libraries-and-data" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Loading Libraries and Data</h1>
-<div id="31a31b9e" class="cell" data-execution_count="1">
+<div id="d69e945c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -248,16 +239,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>raw_df <span class="op">=</span> pd.read_csv(<span class="st">"data/lightcast_job_postings.csv"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.columns.tolist()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81439/1289692877.py:5: DtypeWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/1289692877.py:5: DtypeWarning:
 
 Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
 </div>
 </div>
-</section>
-<section id="cleaning-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Cleaning Data</h1>
-<div id="bdbc6c4d" class="cell" data-execution_count="2">
+<section id="cleaning-data" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Cleaning Data</h1>
+<div id="7d5c985c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>,</span>
@@ -276,7 +266,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.head()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81439/2470702404.py:9: FutureWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:9: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -285,7 +275,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81439/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:10: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -294,16 +284,16 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81439/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:10: FutureWarning:
 
 Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value 'Unknown' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
 </code></pre>
 </div>
 </div>
 </section>
-<section id="plot-setup-for-ai-vs-non-ai-job-posting-count" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Plot setup for AI vs Non-AI job posting count</h1>
-<div id="795b3fc6" class="cell" data-df-print="default" data-execution_count="3">
+<section id="plot-setup-for-ai-vs-non-ai-job-posting-count" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Plot setup for AI vs Non-AI job posting count</h1>
+<div id="bb63b7e3" class="cell" data-df-print="default" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -414,9 +404,9 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </div>
 </div>
 </section>
-<section id="job-postings-for-ai-vs-non-ai-jobs" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Job Postings for AI vs Non-AI Jobs</h1>
-<div id="f9113064" class="cell" data-execution_count="4">
+<section id="job-postings-for-ai-vs-non-ai-jobs" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Job Postings for AI vs Non-AI Jobs</h1>
+<div id="1af9cae1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.ticker <span class="im">import</span> FuncFormatter</span>
@@ -452,9 +442,9 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </ul>
 <p>In summary, there are still more Non-AI jobs than AI jobs in total; however, the number of available AI jobs is increasing rapidly. This transition indicates the shifting of the job market towards the AI-based roles.</p>
 </section>
-<section id="prep-for-monthly-ai-counts" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Prep for monthly AI counts</h1>
-<div id="32f90e2d" class="cell" data-df-print="default" data-execution_count="5">
+<section id="prep-for-monthly-ai-counts" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Prep for monthly AI counts</h1>
+<div id="a971db71" class="cell" data-df-print="default" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -536,7 +526,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>growth_top_rounded[<span class="st">"growth_pct"</span>] <span class="op">=</span> growth_top_rounded[<span class="st">"growth_pct"</span>].<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>growth_top_rounded.head(top_n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81439/672499099.py:67: DeprecationWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/672499099.py:67: DeprecationWarning:
 
 DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
 </code></pre>
@@ -674,9 +664,9 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 <p>In this table, we can see AI job postings growing across many industries. A few sectors jump fast but are small, like Other Holding Companies and Motor Vehicle Parts, and sound signals, but the totals are low, so that they may swing. The strongest, faster growth in real volume is in Temporary Help Services, Other Management Consulting, and Other Computer-Related Services; their monthly averages more than doubled. R&amp;D and Executive Search are up too, with mid totals. There is also a growing group called “Unclassified.” This group includes various categories, so we need to use this data carefully.</p>
 </section>
-<section id="ai-driven-job-growth-by-industry" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> AI-Driven Job Growth by Industry</h1>
-<div id="b21ba8b5" class="cell" data-execution_count="6">
+<section id="ai-driven-job-growth-by-industry" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> AI-Driven Job Growth by Industry</h1>
+<div id="254a2fce" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Short, readable labels + plot &amp; save (Option B) -------------------------</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
@@ -741,9 +731,9 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 <p>The chart shows that AI job postings are increasing quickly in many industries. The largest increases are in Offices of Holding Companies (about 373%) and Motor Vehicle Parts Manufacturing (about 331%). We also see significant growth in R&amp;D (physical/engineering) (about 176%), Executive Search (about 160%), Computer &amp; Peripheral Equipment (about 155%), and Temporary Help Services (about 149%). Other sectors like HR Consulting, Management Consulting, Wholesale Trade Agents, Pharmaceutical Preparation, Other Computer Related, and Unclassified categories enlarged by slightly more than 100% all together. The growth is mainly distributed among the different sectors, while only some industries exhibit the highest increases.</p>
 </section>
-<section id="non-ai-job-posting-growth-by-industry" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Non-AI Job Posting Growth by Industry</h1>
-<div id="39158c31" class="cell" data-execution_count="7">
+<section id="non-ai-job-posting-growth-by-industry" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Non-AI Job Posting Growth by Industry</h1>
+<div id="8746403d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
@@ -919,7 +909,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 </div>
 </div>
-<div id="4ab14c16" class="cell" data-execution_count="8">
+<div id="2a5f13a4" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -979,9 +969,9 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </ul>
 <p>This means for us that non-AI roles are still growing, just not as fast as AI roles. The non-AI opportunities we want more of should be targeted to R&amp;D labs, automotive suppliers, executive search firms, and hardware/peripherals. Outreach to these fields will guarantee more non-AI opportunities. The areas of wholesale, general computer, and pharma-related services, HR consulting would be where one could select with more discrimination since the demand for these practices is on the decline.</p>
 </section>
-<section id="ai-powered-roles-vs-non-ai-roles-salary-prep" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> AI-powered roles vs non-ai roles salary prep</h1>
-<div id="4cbd983f" class="cell" data-execution_count="9">
+<section id="ai-powered-roles-vs-non-ai-roles-salary-prep" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> AI-powered roles vs non-ai roles salary prep</h1>
+<div id="a2737b78" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1166,7 +1156,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 </div>
 </div>
-<div id="bb79aab6" class="cell" data-execution_count="10">
+<div id="75c3f55f" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
@@ -1229,8 +1219,8 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 <p>In this graph, we compared pay for AI and non-AI roles across industries. In most of these sectors, AI jobs pay more; significant gaps show up in Administrative Management &amp; General Services, Commercial Banking, Unclassified, and Food Manufacturing. A few places flip the pattern: Software Publishers, Offices of Certified Public Accountants, Health/Medical Insurance, and Computer Systems Design show higher pay for non-AI roles (or pay that is almost the same in Other Computer-Related Services). For our search, we should target AI roles in industries with clear premium pay, and be careful in the few sectors where AI pay trails non-AI; those roles may be more junior or support.</p>
 </section>
-<section id="market-takeaways-from-our-eda" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Market Takeaways from our EDA</h1>
+<section id="market-takeaways-from-our-eda" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Market Takeaways from our EDA</h1>
 <p>AI does not affect every field the same. From our EDA, the fields that use AI consulting, computer services, R&amp;D, and parts of banking show rising postings and often higher pay, so jobs look safer there. In contrast, areas with flat or falling non-AI postings, wholesale trade agents, some general computer services, pharma prep, and HR consulting look less secure unless they adopt AI tools. Routine, repeat tasks are most at risk, while roles that mix tech and people skills (analysis, client work, project work) look safer.</p>
 <p>Looking across industries, we see growth where AI is being put to work: other computer-related services, management consulting, temporary help services, R&amp;D, and commercial banking. Meanwhile, we see possible displacement or slowdown on the non-AI side in wholesale trade agents, parts of computer services, pharma prep, and HR consulting. In short, sectors leaning into AI grow; those that don’t may shrink or re-scope roles.</p>
 <p>Compared with traditional paths like mechanical engineering, farming, and retail, AI-powered roles are growing faster and usually pay more, according to our charts. Traditional fields still matter, but many tasks there now use AI (e.g., predictive maintenance in mechanical, precision ag in farming, demand forecasting in retail). People who add data and AI skills to their core trade tend to get better options and higher pay.</p>

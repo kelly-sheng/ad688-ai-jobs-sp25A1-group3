@@ -9,7 +9,7 @@
 <meta name="author" content="Kelly, Sabrina, Makenzie">
 <meta name="dcterms.date" content="2025-10-15">
 
-<title>KMeans Clustering – AI vs.&nbsp;Non-AI Careers</title>
+<title>Kmeans Clustering Setup</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -105,12 +105,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner {
-        background: #008f7a;
-      }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -158,8 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">K-Means Clustering</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rf_regression.html"> 
-<span class="menu-text">Logistic Regression</span></a>
+    <a class="nav-link" href="./lr_regression.html"> 
+<span class="menu-text">Logistical Regression</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -172,8 +166,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">KMeans Clustering</h1>
-            <p class="subtitle lead">Applying K-Means to Uncover Patterns in Job Market Data</p>
+      <h1 class="title">Kmeans Clustering Setup</h1>
+            <p class="subtitle lead">Final Report</p>
                       </div>
   </div>
     
@@ -219,18 +213,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#kmeans-clustering-setup" id="toc-kmeans-clustering-setup" class="nav-link active" data-scroll-target="#kmeans-clustering-setup"><span class="header-section-number">1</span> Kmeans Clustering Setup</a></li>
-  <li><a href="#helpers" id="toc-helpers" class="nav-link" data-scroll-target="#helpers"><span class="header-section-number">2</span> Helpers</a></li>
-  <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing"><span class="header-section-number">3</span> Preprocessing</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">4</span> Model Selection</a></li>
-  <li><a href="#final-fit" id="toc-final-fit" class="nav-link" data-scroll-target="#final-fit"><span class="header-section-number">5</span> Final fit</a></li>
-  <li><a href="#cluster-summary-charts" id="toc-cluster-summary-charts" class="nav-link" data-scroll-target="#cluster-summary-charts"><span class="header-section-number">6</span> Cluster summary charts</a></li>
-  <li><a href="#svd-2d" id="toc-svd-2d" class="nav-link" data-scroll-target="#svd-2d"><span class="header-section-number">7</span> SVD 2D</a></li>
-  <li><a href="#single-cluster-scatter" id="toc-single-cluster-scatter" class="nav-link" data-scroll-target="#single-cluster-scatter"><span class="header-section-number">8</span> Single Cluster Scatter</a></li>
-  <li><a href="#reference-table" id="toc-reference-table" class="nav-link" data-scroll-target="#reference-table"><span class="header-section-number">9</span> Reference table</a></li>
-  <li><a href="#heatmap-prep" id="toc-heatmap-prep" class="nav-link" data-scroll-target="#heatmap-prep"><span class="header-section-number">10</span> Heatmap prep</a></li>
-  <li><a href="#heatmap-plot" id="toc-heatmap-plot" class="nav-link" data-scroll-target="#heatmap-plot"><span class="header-section-number">11</span> Heatmap plot</a></li>
-  <li><a href="#kmeans-summary" id="toc-kmeans-summary" class="nav-link" data-scroll-target="#kmeans-summary"><span class="header-section-number">12</span> Kmeans Summary</a></li>
+  <li><a href="#helpers" id="toc-helpers" class="nav-link active" data-scroll-target="#helpers"><span class="header-section-number">1</span> Helpers</a></li>
+  <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing"><span class="header-section-number">2</span> Preprocessing</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection"><span class="header-section-number">3</span> Model Selection</a></li>
+  <li><a href="#final-fit" id="toc-final-fit" class="nav-link" data-scroll-target="#final-fit"><span class="header-section-number">4</span> Final fit</a></li>
+  <li><a href="#cluster-summary-charts" id="toc-cluster-summary-charts" class="nav-link" data-scroll-target="#cluster-summary-charts"><span class="header-section-number">5</span> Cluster summary charts</a></li>
+  <li><a href="#svd-2d" id="toc-svd-2d" class="nav-link" data-scroll-target="#svd-2d"><span class="header-section-number">6</span> SVD 2D</a></li>
+  <li><a href="#single-cluster-scatter" id="toc-single-cluster-scatter" class="nav-link" data-scroll-target="#single-cluster-scatter"><span class="header-section-number">7</span> Single Cluster Scatter</a></li>
+  <li><a href="#reference-table" id="toc-reference-table" class="nav-link" data-scroll-target="#reference-table"><span class="header-section-number">8</span> Reference table</a></li>
+  <li><a href="#heatmap-prep" id="toc-heatmap-prep" class="nav-link" data-scroll-target="#heatmap-prep"><span class="header-section-number">9</span> Heatmap prep</a></li>
+  <li><a href="#heatmap-plot" id="toc-heatmap-plot" class="nav-link" data-scroll-target="#heatmap-plot"><span class="header-section-number">10</span> Heatmap plot</a></li>
+  <li><a href="#kmeans-summary" id="toc-kmeans-summary" class="nav-link" data-scroll-target="#kmeans-summary"><span class="header-section-number">11</span> Kmeans Summary</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="KMeans_clustering_methods.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
     </div>
@@ -241,9 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="kmeans-clustering-setup" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Kmeans Clustering Setup</h1>
-<div id="cf6d62b7" class="cell" data-execution_count="1">
+<div id="6d964361" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -294,23 +285,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"  num_cols:"</span>, num_cols)</span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">42</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81703/3257818786.py:20: DtypeWarning:
-
-Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
-</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Using columns:
   text_col: TITLE_CLEAN
   cat_cols: ['REMOTE_TYPE_NAME', 'STATE_NAME', 'EMPLOYMENT_TYPE_NAME', 'COMPANY_IS_STAFFING', 'ONET_NAME', 'SOC_2021_5_NAME']
   num_cols: ['SALARY', 'MIN_YEARS_EXPERIENCE', 'MAX_YEARS_EXPERIENCE', 'DURATION']</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/3257818786.py:20: DtypeWarning:
+
+Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
+</code></pre>
 </div>
-</section>
-<section id="helpers" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Helpers</h1>
-<div id="d680c1a8" class="cell" data-execution_count="2">
+</div>
+<section id="helpers" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Helpers</h1>
+<div id="0ab267b3" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _clean_text_input(x):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Accept Series, 1-col DataFrame, or numpy array from ColumnTransformer</span></span>
@@ -335,9 +325,9 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    _OHE_KW <span class="op">=</span> {<span class="st">"sparse"</span>: <span class="va">True</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="preprocessing" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Preprocessing</h1>
-<div id="17eaa1d0" class="cell" data-execution_count="3">
+<section id="preprocessing" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Preprocessing</h1>
+<div id="febd8136" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>text_pipe <span class="op">=</span> Pipeline([</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"clean"</span>, FunctionTransformer(_clean_text_input, validate<span class="op">=</span><span class="va">False</span>)),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"tfidf"</span>, TfidfVectorizer(</span>
@@ -374,9 +364,9 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </div>
 </div>
 </section>
-<section id="model-selection" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Model Selection</h1>
-<div id="fb9da2bc" class="cell" data-execution_count="4">
+<section id="model-selection" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Model Selection</h1>
+<div id="6c085841" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k_values <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">4</span>, <span class="dv">11</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>inertias, sils <span class="op">=</span> [], []</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -425,9 +415,9 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </div>
 </div>
 </section>
-<section id="final-fit" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Final fit</h1>
-<div id="805dd411" class="cell" data-execution_count="5">
+<section id="final-fit" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Final fit</h1>
+<div id="2622ac5e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> TruncatedSVD  <span class="co"># used later</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>best_k, n_init<span class="op">=</span><span class="dv">20</span>, random_state<span class="op">=</span>RANDOM_STATE)</span>
@@ -479,9 +469,9 @@ Top terms file saved -&gt; output/cluster_top_terms.txt</code></pre>
 </div>
 </div>
 </section>
-<section id="cluster-summary-charts" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Cluster summary charts</h1>
-<div id="24d93529" class="cell" data-execution_count="6">
+<section id="cluster-summary-charts" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Cluster summary charts</h1>
+<div id="016616f7" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.ticker <span class="im">import</span> FuncFormatter</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -560,7 +550,7 @@ Top terms file saved -&gt; output/cluster_top_terms.txt</code></pre>
 <span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>stats_out.to_csv(<span class="st">"output/cluster_summary.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>stats_out.head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81703/2483979144.py:22: MatplotlibDeprecationWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/2483979144.py:22: MatplotlibDeprecationWarning:
 
 The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
 </code></pre>
@@ -634,8 +624,8 @@ The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.
 </div>
 </div>
 </section>
-<section id="svd-2d" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> SVD 2D</h1>
+<section id="svd-2d" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> SVD 2D</h1>
 <div id="svd-2d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> TruncatedSVD</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -644,13 +634,13 @@ The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>XY <span class="op">=</span> svd.fit_transform(X)</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Explained variance (2 comps):"</span>, svd.explained_variance_ratio_.<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Explained variance (2 comps): 0.3385352006257034</code></pre>
+<pre><code>Explained variance (2 comps): 0.3385352006257032</code></pre>
 </div>
 </div>
 </section>
-<section id="single-cluster-scatter" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Single Cluster Scatter</h1>
-<div id="d2695325" class="cell" data-dependson="[&quot;svd-2d&quot;]" data-execution_count="8">
+<section id="single-cluster-scatter" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Single Cluster Scatter</h1>
+<div id="f402035b" class="cell" data-dependson="[&quot;svd-2d&quot;]" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">6</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">sorted</span>(np.unique(labels)):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> (labels <span class="op">==</span> c)</span>
@@ -672,9 +662,9 @@ The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.
 </div>
 <p>Under the recommendation of the Kmeans Elbow and Silhouette measures, four clear segments have emerged. C0 (EA / SAP–Oracle Consulting, Sr) comprises enterprise solution owners and senior consultants focused on ERP/CRM integrations, domain architecture, and delivery roadmaps. C1 (Data / BI Analysts) is the high‑volume analytics backbone handling reporting, dashboards, and KPI/ad‑hoc analysis at mid‑career compensation. C2 (Enterprise / Cloud Architects) is the premium niche cluster with principals and leads who own cloud platforms, reliability/security, and cross‑team technical direction, and therefore command the highest pay. C3 (Data / BI Analysts, consulting tilt) mirrors C1’s skills but skews toward consulting and remote work and shows the highest AI‑keyword incidence, reflecting applied‑AI enablement inside analytics teams. Overall, analyst demand drives scale (C1/C3), enterprise solutioning provides the integration bench (C0), and cross‑platform leadership remains scarce and premium (C2).</p>
 </section>
-<section id="reference-table" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Reference table</h1>
-<div id="f1c3fe97" class="cell" data-execution_count="9">
+<section id="reference-table" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Reference table</h1>
+<div id="6a4f6a6c" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    adjusted_rand_score, normalized_mutual_info_score,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    homogeneity_score, completeness_score, v_measure_score</span>
@@ -730,9 +720,9 @@ Overall purity: 0.999</code></pre>
 </div>
 </div>
 </section>
-<section id="heatmap-prep" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Heatmap prep</h1>
-<div id="4613a313" class="cell" data-execution_count="10">
+<section id="heatmap-prep" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Heatmap prep</h1>
+<div id="b3652935" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick diagnostics for label visibility</span></span>
@@ -850,9 +840,9 @@ Overall purity: 0.999</code></pre>
 </div>
 </div>
 </section>
-<section id="heatmap-plot" class="level1" data-number="11">
-<h1 data-number="11"><span class="header-section-number">11</span> Heatmap plot</h1>
-<div id="a51831ea" class="cell" data-execution_count="11">
+<section id="heatmap-plot" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Heatmap plot</h1>
+<div id="19e3eb07" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, pandas <span class="im">as</span> pd, os</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
@@ -918,7 +908,7 @@ Overall purity: 0.999</code></pre>
 <span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">"output/cluster_vs_reference_heatmap.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
 <span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81703/2086638697.py:62: UserWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/2086638697.py:62: UserWarning:
 
 Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
 </code></pre>
@@ -933,8 +923,8 @@ Tight layout not applied. The bottom and top margins cannot be made large enough
 </div>
 <p>This figure is a heatmap of job‑posting shares by industry, displayed as row percentages. The leftmost column— that includes Professional, Scientific &amp; Technical Services, shows the darkest shading overall, meaning a large portion of postings in each row come from that industry, while lighter columns represent industries that account for a smaller share. The Profesional, Scientific, and Technical Services industry does seem to be the hottest job market based off of this dataset, however, this does not mean that it is necessarily driven by AI alone.</p>
 </section>
-<section id="kmeans-summary" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Kmeans Summary</h1>
+<section id="kmeans-summary" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Kmeans Summary</h1>
 <p>The results point to a job market organized around four role families with one noticeably premium niche, and they suggest that compensation and hiring dynamics are driven more by seniority and enterprise scope than by AI keywords. Cluster C1 (Analyst &amp; BI Core) supplies most of the volume (≈56%), centered on titles like data analyst, business analyst, and BI/analytics; it anchors day‑to‑day decision support and sits near the mid‑$110k median. Cluster C3 (Data Analyst &amp; BI — Mixed/Remote, AI‑skewed) is a smaller analyst cohort with a stronger remote profile and the highest AI‑keyword incidence; it reflects applied‑AI enablement inside analytics teams and also prices around the mid‑$110k band. Cluster C0 (Enterprise Architecture &amp; Solutions) blends architect/enterprise/SAP‑Oracle/consultant language and tilts toward cross‑system solution ownership—ERP/CRM modernization, integration roadmaps, and domain architecture—with compensation likewise clustering near the mid‑$110k range. Finally, Cluster C2 (Senior Enterprise/Cloud Leadership) is the small but premium niche (~7%) that stands apart both visually and economically, with a roughly $175k median in the provided charts; employers reward systems ownership, architectural accountability, reliability/security considerations, and cross‑team leadership, even when titles don’t carry explicit AI keywords. Meanwhile, AI‑tagged titles are increasing from a small base and are unevenly distributed—most common in C3 and least common in C2, yet the salary premium does not follow that same AI gradient, reinforcing that pay aligns with role family and enterprise scope rather than AI labeling. Industry composition across all clusters is anchored in Professional, Scientific &amp; Technical Services, with steady contributions from Administrative &amp; Support, Finance &amp; Insurance, and Manufacturing. The fastest AI growth is occurring outside of pure software—holding companies, motor‑vehicle parts, R&amp;D services, executive search, and temporary help which signals diffusion of AI demand into corporate centers and industrial supply chains. This suggests that an increased use of applied AI in operational workforces. Altogether, the evidence suggests a hybrid hiring mix: steady growth of applied‑AI roles embedded in analytics workflows (C1/C3), alongside continued scarcity and premium pricing for cross‑functional platform leaders (C2) who can translate strategy into architecture and delivery, with C0 providing the enterprise solutions bench that stitches systems and governance together. Although AI is a key component within this analysis, it does not necessarily mean that AI is overtaking the job industry and ‘destroying the job market’, but rather remodeling the job market and how we use technology within the workplace. AI is steadily contributing to industries such as Administrative &amp; Support, Finance &amp; Insurance, and Manufacturing, however, premium job postings with the highest salaries seem to still value human judgement and ability.</p>
 
 

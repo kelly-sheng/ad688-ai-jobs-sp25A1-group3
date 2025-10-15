@@ -1,5 +1,0 @@
----
-title: "About"
----
-
-Short Bio and Career goals

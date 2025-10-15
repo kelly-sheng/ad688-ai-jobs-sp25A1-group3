@@ -9,7 +9,7 @@
 <meta name="author" content="Kelly, Sabrina, Makenzie">
 <meta name="dcterms.date" content="2025-10-15">
 
-<title>Skill Gap Analysis – AI vs.&nbsp;Non-AI Careers</title>
+<title>Loading Libraries and Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -105,12 +105,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<style>
-
-      .quarto-title-block .quarto-title-banner {
-        background: #008f7a;
-      }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -158,8 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">K-Means Clustering</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./rf_regression.html"> 
-<span class="menu-text">Logistic Regression</span></a>
+    <a class="nav-link" href="./lr_regression.html"> 
+<span class="menu-text">Logistical Regression</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -172,8 +166,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Skill Gap Analysis</h1>
-            <p class="subtitle lead">Compare the skills required in IT job postings against the actual skills of group members to identify knowledge gaps and areas for improvement</p>
+      <h1 class="title">Loading Libraries and Data</h1>
+            <p class="subtitle lead">Final Report</p>
                       </div>
   </div>
     
@@ -219,21 +213,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-libraries-and-data" id="toc-loading-libraries-and-data" class="nav-link active" data-scroll-target="#loading-libraries-and-data"><span class="header-section-number">1</span> Loading Libraries and Data</a></li>
-  <li><a href="#cleaning-data" id="toc-cleaning-data" class="nav-link" data-scroll-target="#cleaning-data"><span class="header-section-number">2</span> Cleaning Data</a></li>
-  <li><a href="#create-a-team-based-skill-dataframe" id="toc-create-a-team-based-skill-dataframe" class="nav-link" data-scroll-target="#create-a-team-based-skill-dataframe"><span class="header-section-number">3</span> Create a team-based skill dataframe</a>
+  <li><a href="#cleaning-data" id="toc-cleaning-data" class="nav-link active" data-scroll-target="#cleaning-data"><span class="header-section-number">1</span> Cleaning Data</a></li>
+  <li><a href="#create-a-team-based-skill-dataframe" id="toc-create-a-team-based-skill-dataframe" class="nav-link" data-scroll-target="#create-a-team-based-skill-dataframe"><span class="header-section-number">2</span> Create a team-based skill dataframe</a>
   <ul class="collapse">
-  <li><a href="#top-strengths-per-person" id="toc-top-strengths-per-person" class="nav-link" data-scroll-target="#top-strengths-per-person"><span class="header-section-number">3.1</span> Top strengths per person**</a></li>
-  <li><a href="#team-averages-by-skill" id="toc-team-averages-by-skill" class="nav-link" data-scroll-target="#team-averages-by-skill"><span class="header-section-number">3.2</span> Team averages by skill</a></li>
+  <li><a href="#top-strengths-per-person" id="toc-top-strengths-per-person" class="nav-link" data-scroll-target="#top-strengths-per-person"><span class="header-section-number">2.1</span> Top strengths per person**</a></li>
+  <li><a href="#team-averages-by-skill" id="toc-team-averages-by-skill" class="nav-link" data-scroll-target="#team-averages-by-skill"><span class="header-section-number">2.2</span> Team averages by skill</a></li>
   </ul></li>
-  <li><a href="#compare-team-skills-to-industry-requirements" id="toc-compare-team-skills-to-industry-requirements" class="nav-link" data-scroll-target="#compare-team-skills-to-industry-requirements"><span class="header-section-number">4</span> Compare team skills to industry requirements</a>
+  <li><a href="#compare-team-skills-to-industry-requirements" id="toc-compare-team-skills-to-industry-requirements" class="nav-link" data-scroll-target="#compare-team-skills-to-industry-requirements"><span class="header-section-number">3</span> Compare team skills to industry requirements</a>
   <ul class="collapse">
-  <li><a href="#extract-the-most-in-demand-skills-from-it-job-postings" id="toc-extract-the-most-in-demand-skills-from-it-job-postings" class="nav-link" data-scroll-target="#extract-the-most-in-demand-skills-from-it-job-postings"><span class="header-section-number">4.1</span> Extract the Most In-Demand Skills from IT Job Postings</a></li>
-  <li><a href="#industry-expertise-demand-data-driven-15" id="toc-industry-expertise-demand-data-driven-15" class="nav-link" data-scroll-target="#industry-expertise-demand-data-driven-15"><span class="header-section-number">4.2</span> Industry expertise demand (data-driven 1–5)</a></li>
-  <li><a href="#team-skills-vs.-industry-requiments" id="toc-team-skills-vs.-industry-requiments" class="nav-link" data-scroll-target="#team-skills-vs.-industry-requiments"><span class="header-section-number">4.3</span> Team Skills Vs. Industry Requiments</a></li>
-  <li><a href="#gaps-market-adjusted-priorities" id="toc-gaps-market-adjusted-priorities" class="nav-link" data-scroll-target="#gaps-market-adjusted-priorities"><span class="header-section-number">4.4</span> Gaps + Market Adjusted Priorities</a></li>
+  <li><a href="#extract-the-most-in-demand-skills-from-it-job-postings" id="toc-extract-the-most-in-demand-skills-from-it-job-postings" class="nav-link" data-scroll-target="#extract-the-most-in-demand-skills-from-it-job-postings"><span class="header-section-number">3.1</span> Extract the Most In-Demand Skills from IT Job Postings</a></li>
+  <li><a href="#industry-expertise-demand-data-driven-15" id="toc-industry-expertise-demand-data-driven-15" class="nav-link" data-scroll-target="#industry-expertise-demand-data-driven-15"><span class="header-section-number">3.2</span> Industry expertise demand (data-driven 1–5)</a></li>
+  <li><a href="#team-skills-vs.-industry-requiments" id="toc-team-skills-vs.-industry-requiments" class="nav-link" data-scroll-target="#team-skills-vs.-industry-requiments"><span class="header-section-number">3.3</span> Team Skills Vs. Industry Requiments</a></li>
+  <li><a href="#gaps-market-adjusted-priorities" id="toc-gaps-market-adjusted-priorities" class="nav-link" data-scroll-target="#gaps-market-adjusted-priorities"><span class="header-section-number">3.4</span> Gaps + Market Adjusted Priorities</a></li>
   </ul></li>
-  <li><a href="#improvement-plan" id="toc-improvement-plan" class="nav-link" data-scroll-target="#improvement-plan"><span class="header-section-number">5</span> Improvement Plan</a></li>
+  <li><a href="#improvement-plan" id="toc-improvement-plan" class="nav-link" data-scroll-target="#improvement-plan"><span class="header-section-number">4</span> Improvement Plan</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="skill_gap_analysis.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
     </div>
@@ -244,9 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="loading-libraries-and-data" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Loading Libraries and Data</h1>
-<div id="31e3f709" class="cell" data-execution_count="1">
+<div id="012e4af1" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -254,16 +245,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>raw_df <span class="op">=</span> pd.read_csv(<span class="st">"data/lightcast_job_postings.csv"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.columns.tolist()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81611/1289692877.py:5: DtypeWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/1289692877.py:5: DtypeWarning:
 
 Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
 </div>
 </div>
-</section>
-<section id="cleaning-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Cleaning Data</h1>
-<div id="a3e920f0" class="cell" data-execution_count="2">
+<section id="cleaning-data" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Cleaning Data</h1>
+<div id="d16602c0" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>,</span>
@@ -282,7 +272,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.head()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81611/2470702404.py:9: FutureWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:9: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -291,7 +281,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81611/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:10: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -300,15 +290,15 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/xq/hz_jsm8n7916kt1g6zzwf7cm0000gn/T/ipykernel_81611/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:10: FutureWarning:
 
 Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value 'Unknown' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
 </code></pre>
 </div>
 </div>
 </section>
-<section id="create-a-team-based-skill-dataframe" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Create a team-based skill dataframe</h1>
+<section id="create-a-team-based-skill-dataframe" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Create a team-based skill dataframe</h1>
 <p>Use Scale (1-5) to indicate proficiency levels for each team Member:</p>
 <ul>
 <li>1 = Beginner</li>
@@ -318,7 +308,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <li>5 = Expert</li>
 </ul>
 <p><strong>Note:</strong> We build the team skill dataframe based on our skills and the most in-demand IT skills and set 1-5 levels for each team member. This allows us to compare side by side in the comparation analysis below.</p>
-<div id="6b74afab" class="cell" data-execution_count="3">
+<div id="7aca9118" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>skills_data <span class="op">=</span> {</span>
@@ -371,9 +361,9 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </div>
 </div>
 <p>The team skills levels headmap demostrated we are strogest in communication and problem solving. We also solid in SQL, dashboard /Tableau, and finance. Our weak spots are Computer Science, operations, project management, and writing clear business requiments and process steps.</p>
-<section id="top-strengths-per-person" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="top-strengths-per-person"><span class="header-section-number">3.1</span> Top strengths per person**</h2>
-<div id="df8d5c52" class="cell" data-execution_count="4">
+<section id="top-strengths-per-person" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="top-strengths-per-person"><span class="header-section-number">2.1</span> Top strengths per person**</h2>
+<div id="aba82ce4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>top_strengths <span class="op">=</span> df_skills.<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[row <span class="op">==</span> row.<span class="bu">max</span>()].index.tolist(), axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>top_strengths.to_frame(name<span class="op">=</span><span class="st">"Top Strength Skills"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -411,9 +401,9 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </div>
 </div>
 </section>
-<section id="team-averages-by-skill" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="team-averages-by-skill"><span class="header-section-number">3.2</span> Team averages by skill</h2>
-<div id="37569e46" class="cell" data-execution_count="5">
+<section id="team-averages-by-skill" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="team-averages-by-skill"><span class="header-section-number">2.2</span> Team averages by skill</h2>
+<div id="84d807e4" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>team_avg <span class="op">=</span> df_skills.mean().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>team_avg.to_frame(name<span class="op">=</span><span class="st">"Team Average (1–5)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -449,6 +439,14 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <td>3.666667</td>
 </tr>
 <tr class="even">
+<th data-quarto-table-cell-role="th">Excel</th>
+<td>3.333333</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Presentations</th>
+<td>3.333333</td>
+</tr>
+<tr class="even">
 <th data-quarto-table-cell-role="th">Planning</th>
 <td>3.333333</td>
 </tr>
@@ -457,23 +455,15 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <td>3.333333</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">Presentations</th>
-<td>3.333333</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">Excel</th>
-<td>3.333333</td>
-</tr>
-<tr class="even">
 <th data-quarto-table-cell-role="th">Data Analysis</th>
 <td>3.000000</td>
 </tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">Management</th>
+<th data-quarto-table-cell-role="th">Dashboard</th>
 <td>3.000000</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">Dashboard</th>
+<th data-quarto-table-cell-role="th">Management</th>
 <td>3.000000</td>
 </tr>
 <tr class="odd">
@@ -493,19 +483,19 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <td>2.000000</td>
 </tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">Business Requirements</th>
-<td>2.000000</td>
-</tr>
-<tr class="even">
 <th data-quarto-table-cell-role="th">Finance</th>
 <td>2.000000</td>
 </tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Business Requirements</th>
+<td>2.000000</td>
+</tr>
 <tr class="odd">
-<th data-quarto-table-cell-role="th">Computer Science</th>
+<th data-quarto-table-cell-role="th">Operations</th>
 <td>1.666667</td>
 </tr>
 <tr class="even">
-<th data-quarto-table-cell-role="th">Operations</th>
+<th data-quarto-table-cell-role="th">Computer Science</th>
 <td>1.666667</td>
 </tr>
 </tbody>
@@ -516,11 +506,11 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </div>
 </section>
 </section>
-<section id="compare-team-skills-to-industry-requirements" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Compare team skills to industry requirements</h1>
-<section id="extract-the-most-in-demand-skills-from-it-job-postings" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="extract-the-most-in-demand-skills-from-it-job-postings"><span class="header-section-number">4.1</span> Extract the Most In-Demand Skills from IT Job Postings</h2>
-<div id="f46f2deb" class="cell" data-execution_count="6">
+<section id="compare-team-skills-to-industry-requirements" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Compare team skills to industry requirements</h1>
+<section id="extract-the-most-in-demand-skills-from-it-job-postings" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="extract-the-most-in-demand-skills-from-it-job-postings"><span class="header-section-number">3.1</span> Extract the Most In-Demand Skills from IT Job Postings</h2>
+<div id="b638f547" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ast</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -555,10 +545,10 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </div>
 </div>
 </section>
-<section id="industry-expertise-demand-data-driven-15" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="industry-expertise-demand-data-driven-15"><span class="header-section-number">4.2</span> Industry expertise demand (data-driven 1–5)</h2>
+<section id="industry-expertise-demand-data-driven-15" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="industry-expertise-demand-data-driven-15"><span class="header-section-number">3.2</span> Industry expertise demand (data-driven 1–5)</h2>
 <p>In this section, We built a simple market target for each top skill using what employers write in job postings. First, we joined the job title and description so we could read the text. If a post listed MIN_YEARS_EXPERIENCE, we used it; if not, we pulled numbers like “3+ years” from the text and mapped years to a 1–5 level (with a small bump so “3 years” sits in the middle of a 3–5 range). Next, we read seniority words in the title (junior vs.&nbsp;senior/lead/manager) and skill phrases in the text (basic, intermediate, advanced, expert) and turned those into levels too. For each posting and skill, we combined the three signals, years (50%), seniority (30%), and phrases (20%) to get one score. Finally, we averaged those scores across all postings for each skill to get a 1–5 industry target, which we used to compare with our team’s ratings.</p>
-<div id="cac4b09c" class="cell" data-execution_count="7">
+<div id="ca1e90b9" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -674,9 +664,9 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </div>
 </div>
 </section>
-<section id="team-skills-vs.-industry-requiments" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="team-skills-vs.-industry-requiments"><span class="header-section-number">4.3</span> Team Skills Vs. Industry Requiments</h2>
-<div id="c3cad5a9" class="cell" data-execution_count="8">
+<section id="team-skills-vs.-industry-requiments" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="team-skills-vs.-industry-requiments"><span class="header-section-number">3.3</span> Team Skills Vs. Industry Requiments</h2>
+<div id="ce260130" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -944,7 +934,7 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<div id="8ad4a9de" class="cell" data-execution_count="9">
+<div id="d98ce815" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -984,9 +974,9 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </div>
 <p>The team vs.&nbsp;industry headmad compares our skills to the market targets (bottom row). We meet or beat the target in communication and Tableau and are close on problem solving, Excel, and detail-oriented work. We are below the target in computer science, operations, project management, business requirements/process, leadership, finance, Python, and SQL. Our focus should be to raise those areas to about 3.5 or 4 with short courses and practice. Overall, we explain and show insights well, but we need stronger basics and delivery skills to match the market.</p>
 </section>
-<section id="gaps-market-adjusted-priorities" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="gaps-market-adjusted-priorities"><span class="header-section-number">4.4</span> Gaps + Market Adjusted Priorities</h2>
-<div id="2ff2c66f" class="cell" data-execution_count="10">
+<section id="gaps-market-adjusted-priorities" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="gaps-market-adjusted-priorities"><span class="header-section-number">3.4</span> Gaps + Market Adjusted Priorities</h2>
+<div id="7b4a65fb" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unweighted gap (Target − Team Avg)</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>team_avg <span class="op">=</span> df_team_top10.mean()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>gap <span class="op">=</span> expected_per_skill <span class="op">-</span> team_avg</span>
@@ -1144,8 +1134,8 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 <p>To set priorities, we adjust each gap by how common the skill is in job postings (market-adjusted priority). Using that, we should first focus on computer science and operations, then business requirements and project management, followed by finance/SAP. This plan lets us close the largest, most market-relevant gaps first while keeping our strengths sharp.</p>
 </section>
 </section>
-<section id="improvement-plan" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Improvement Plan</h1>
+<section id="improvement-plan" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Improvement Plan</h1>
 <p>To improve our IT skills, we can focus on computer science basics, business requirements, project management, and operations. Mackenzie can prioritize computer science, then operations, finance, and project management. Sabrina will focus on project management, business requirements, and operations. Finally, Kelly can focus on computer science, then business requirements, operations, and SAP basics. We can keep our strengths, such as communication, Tableau, SQL, and problem-solving, refreshed with light weekly practice.</p>
 <p>Additionally, we could use the following resources to improve our skills: Harvard CS50x for an introduction to computer science (a free course) and LeetCode for practice. For the programming languages SQL and Python, we can use Coursera and DataCamp courses, and LeetCode for programming exercises, which are really helpful for interview practice. For Project Management and operations, we can take the Google Project Management on Coursera. For business requirements, we can take the Managing Requirements for the Business Analysis course on Pluralsight. For finance, we can use Khan Academy’s accounting and financial statements modules. For SAP, we can use SAP Learning’s free fundamentals. For Excel, we can follow Microsoft Learn’s Excel path to reach level 3+.</p>
 <p>Finally, we can address our skill gaps with a simple schedule. We can meet weekly or every other week and rotate knowledge guides for each session. If someone is great at project management or another skill, they will share their knowledge and tips. We will work on small, practical projects where we code together, review each other’s work, and discuss what we find. We can keep a shared document and a simple dashboard using a template to track each person’s goals, progress, and next steps for each area that needs improvement. After each session, we will note what we learned, what held us back, and what went well to keep improving.</p>
