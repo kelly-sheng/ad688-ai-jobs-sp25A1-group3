@@ -1,6 +1,7 @@
 project:
   type: website
   render: 
+        - index.qmd
         - about.qmd
         - research_introduction.qmd
         - data_analysis.qmd

@@ -1,7 +1,9 @@
 ---
-title: "AI Jobs"
+title: "Home"
+subtitle: AI vs Non-AI Careers
+title-block-banner: "#008f7a"
 ---
 
-This is a Quarto website.
+Hiring is shifting toward AI-enabled roles across industries, but we don’t have a clear view of where demand is growing and how that affects our job search. Without that, we risk aiming at slow areas and missing interviews and offers.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This report provides multiple solutions and insights based on the Lightcase Job Posting data as well as our recommendations for those who are currently job hunting and looking for way to refine their search to align with their skillset.
