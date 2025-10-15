@@ -1,13 +1,13 @@
 
 ```{python}
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, lit, concat_ws, lower, regexp_replace, when, mean as _mean
 from pyspark.sql import SparkSession, Row
+from pyspark.sql.functions import col, lit, concat_ws, lower, regexp_replace, when, trim, mean as _mean
 from pyspark.sql.types import DoubleType
-from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
-from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler, MinMaxScaler
+from pyspark.ml.classification import LogisticRegression
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml import Pipeline
+from pyspark.ml.functions import vector_to_array
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -61,81 +61,87 @@ model_df = df.select(
     "SALARY_AVG",
     "MIN_YEARS_EXPERIENCE",
     "MIN_EDULEVELS",
-    "STATE",
+    "STATE_NAME",
     "REMOTE_TYPE"
 )
+```
 
-# --- Fill numeric nulls ---
+```{python}
+# --- Handle numeric nulls ---
 numeric_cols = ["SALARY_AVG", "MIN_YEARS_EXPERIENCE", "MIN_EDULEVELS"]
 for c in numeric_cols:
     model_df = model_df.withColumn(c, col(c).cast(DoubleType()))
     mean_val = model_df.select(_mean(col(c))).first()[0]
     model_df = model_df.na.fill({c: mean_val})
-```
 
-```{python}
+# --- Handle categorical nulls ---
+categorical_cols = ["STATE_NAME", "REMOTE_TYPE"]
+model_df = model_df.filter(
+    (trim(col("STATE_NAME")) != "") &
+    (trim(col("REMOTE_TYPE")) != "") &
+    col("STATE_NAME").isNotNull() &
+    col("REMOTE_TYPE").isNotNull()
+)
+
 # --- Encode categorical variables ---
-categorical_cols = ["STATE", "REMOTE_TYPE"]
 indexers = [StringIndexer(inputCol=c, outputCol=f"{c}_IDX", handleInvalid="keep") for c in categorical_cols]
 encoders = [OneHotEncoder(inputCol=f"{c}_IDX", outputCol=f"{c}_VEC") for c in categorical_cols]
 
-# --- Assemble features ---
-assembler = VectorAssembler(
-    inputCols=numeric_cols + [f"{c}_VEC" for c in categorical_cols],
+# --- Assemble numeric features ---
+numeric_assembler = VectorAssembler(inputCols=numeric_cols, outputCol="numeric_features")
+
+# --- Scale numeric features to 0-1 ---
+scaler = MinMaxScaler(inputCol="numeric_features", outputCol="numeric_scaled")
+
+# --- Assemble final feature vector (scaled numeric + categorical vectors) ---
+final_assembler = VectorAssembler(
+    inputCols=["numeric_scaled"] + [f"{c}_VEC" for c in categorical_cols],
     outputCol="features"
 )
 
-# --- Random Forest classifier ---
-rf = RandomForestClassifier(featuresCol="features", labelCol="requires_ai", numTrees=50, maxDepth=5, seed=42)
+# --- Logistic Regression classifier ---
+from pyspark.ml.classification import LogisticRegression
+lr = LogisticRegression(featuresCol="features", labelCol="requires_ai", maxIter=50, regParam=0.0, elasticNetParam=0.0)
 
 # --- Build pipeline ---
-pipeline = Pipeline(stages=indexers + encoders + [assembler, rf])
+pipeline = Pipeline(stages=indexers + encoders + [numeric_assembler, scaler, final_assembler, lr])
 
-# --- Split train/test ---
+# --- Split train/test and fit ---
 train_df, test_df = model_df.randomSplit([0.8, 0.2], seed=42)
-
-# --- Train model ---
-rf_model = pipeline.fit(train_df)
+lr_model = pipeline.fit(train_df)
 ```
 
 ```{python}
 # --- Predict & evaluate ---
-predictions = rf_model.transform(test_df)
+predictions = lr_model.transform(test_df)
 evaluator = BinaryClassificationEvaluator(labelCol="requires_ai", metricName="areaUnderROC")
 roc_auc = evaluator.evaluate(predictions)
 print(f"ROC-AUC: {roc_auc:.3f}")
-```
-ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
 
-```{python}
-# --- Feature importances (aggregate categorical vectors) ---
-rf_stage = rf_model.stages[-1]
-importances = rf_stage.featureImportances.toArray()
+# --- Extract logistic regression stage ---
+lr_stage = lr_model.stages[-1]
 
-# Get the sizes of one-hot encoded vectors
-ohe_stages = [s for s in rf_model.stages if isinstance(s, OneHotEncoder)]
-categorical_sizes = []
-for ohe in ohe_stages:
-    # Number of categories = size of metadata after encoding
-    categorical_sizes.append(len(ohe.getOutputCol() + "_metadata") if False else ohe.getOutputCols() if hasattr(ohe,'getOutputCols') else ohe.categorySizes[0] if hasattr(ohe,'categorySizes') else None)
+# LogisticRegressionModel in Spark stores coefficients in a dense vector
+coefficients = lr_stage.coefficients.toArray()
 
-# Alternative simpler approach: we can get vector size from the first row of transformed vector
-features_vec = rf_model.transform(test_df).select("features").first()[0]
-vector_size = len(features_vec)
-
-# Approximate: numeric features = 1, categorical features = remaining size divided equally
+# --- Compute feature sizes ---
+# Number of numeric features
 num_numeric = len(numeric_cols)
+# One-hot vector sizes for categorical features
+features_vec = lr_model.transform(test_df).select("features").first()[0]
+vector_size = len(features_vec)
 num_categorical = len(categorical_cols)
 categorical_vector_sizes = [(vector_size - num_numeric)//num_categorical]*num_categorical
 
+# --- Aggregate coefficients by feature ---
 feature_sizes = [1]*num_numeric + categorical_vector_sizes
 feature_names = numeric_cols + categorical_cols
 
-# Aggregate importances
 agg_importances = []
 start = 0
 for size in feature_sizes:
-    agg_importances.append(np.sum(importances[start:start+size]))
+    # Take mean of absolute values of coefficients for categorical features
+    agg_importances.append(np.mean(np.abs(coefficients[start:start+size])))
     start += size
 
 # --- Create DataFrame & plot ---
@@ -146,60 +152,52 @@ importance_df = pd.DataFrame({
 
 plt.figure(figsize=(8,5))
 plt.barh(importance_df["Feature"], importance_df["Importance"])
-plt.xlabel("Importance")
-plt.title("Random Forest Feature Importances")
+plt.xlabel("Mean Absolute Coefficient")
+plt.title("Logistic Regression Feature Importances (mean per categorical vector)")
 plt.gca().invert_yaxis()
 plt.show()
 ```
+ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
 
 ```{python}
-from pyspark.ml.functions import vector_to_array
-
 # --- Create sample job listings ---
 sample_jobs = [
-    Row(MIN_YEARS_EXPERIENCE=15.0, SALARY_AVG=300000.0, STATE=36, MIN_EDULEVELS=4, REMOTE_TYPE=1),
-    Row(MIN_YEARS_EXPERIENCE=2.0, SALARY_AVG=75000.0, STATE=10, MIN_EDULEVELS=0, REMOTE_TYPE=0),
-    Row(MIN_YEARS_EXPERIENCE=3.0, SALARY_AVG=95000.0, STATE=38, MIN_EDULEVELS=1, REMOTE_TYPE=1)
+    Row(MIN_YEARS_EXPERIENCE=10.0, SALARY_AVG=300000.0, STATE_NAME="Massachusetts", MIN_EDULEVELS=3.0, REMOTE_TYPE="Remote"),
+    Row(MIN_YEARS_EXPERIENCE=5.0, SALARY_AVG=75000.0, STATE_NAME="Texas", MIN_EDULEVELS=0.0, REMOTE_TYPE="Onsite"),
+    Row(MIN_YEARS_EXPERIENCE=10.0, SALARY_AVG=120000.0, STATE_NAME="Minnesota", MIN_EDULEVELS=2.0, REMOTE_TYPE="Hybrid"),
+    Row(MIN_YEARS_EXPERIENCE=15.0, SALARY_AVG=150000.0, STATE_NAME="New York", MIN_EDULEVELS=2.0, REMOTE_TYPE="Remote"),
 ]
 
 sample_df = spark.createDataFrame(sample_jobs)
 
-numeric_cols = ["MIN_YEARS_EXPERIENCE", "SALARY_AVG", "MIN_EDULEVELS", "STATE", "REMOTE_TYPE"]
-for c in numeric_cols:
+# Ensure numeric columns are DoubleType
+for c in ["MIN_YEARS_EXPERIENCE", "SALARY_AVG", "MIN_EDULEVELS"]:
     sample_df = sample_df.withColumn(c, col(c).cast(DoubleType()))
 
-# --- Transform the samples through the trained pipeline ---
-predictions = rf_model.transform(sample_df)
+# --- Transform samples through the trained pipeline ---
+predictions = lr_model.transform(sample_df)
+
+# --- Extract probability of AI class ---
 predictions_array = predictions.withColumn("prob_array", vector_to_array(col("probability")))
 
-# --- Extract probability of AI class and display results ---
+# --- Show results ---
 results = predictions_array.select(
     "MIN_YEARS_EXPERIENCE",
     "SALARY_AVG",
-    "STATE",
+    "STATE_NAME",
     "MIN_EDULEVELS",
     "REMOTE_TYPE",
     col("prob_array")[1].alias("AI_prob"),
     "prediction"
 )
 
-#results.show(truncate=False)
-results.toPandas()
-
-# --- Doc-friendly table (no pipeline changes) ---
-pdf = results.toPandas()
-
-# Light formatting for readability
-pdf["AI_prob"] = pdf["AI_prob"].round(3)
-pdf["MIN_YEARS_EXPERIENCE"] = pdf["MIN_YEARS_EXPERIENCE"].round(1)
-pdf["SALARY_AVG"] = pdf["SALARY_AVG"].map(lambda x: f"{x:,.0f}")  # 300,000
-
-# 1) Quick copy/paste option (plain text table)
-print(pdf.to_string(index=False))
+results.show(truncate=False)
 ```
 
 # Random Forest Regression Summary
 
-This analysis used a Random Forest model to distinguish AI from non-AI job postings based on five features: minimum years of experience, average salary, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, offer higher compensation, demand advanced degrees, and are concentrated in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience and salary were the most influential factors, followed by state, education, and remote type, reflecting the expected patterns of AI job characteristics.
+This analysis skimmed the job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model trained on five features: minimum years of experience, average salary, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, offer higher compensation, demand advanced degrees, and are concentrated in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience and salary were the most influential factors, followed by state, education, and remote type, reflecting the expected patterns of AI job characteristics.
 
-However, when using this model to predict whether or not a posting would be AI or not, we encountered several limitations that may explain its underperformance. Treating state as a numeric variable may not fully capture the categorical differences between regions, and the model’s majority-vote mechanism can classify borderline AI roles as non-AI, especially when AI postings are underrepresented in the training data. Additional factors such as inconsistent labeling of AI roles, limited sample size, and high variance in salary or education requirements could further reduce predictive accuracy. Despite these challenges, the analysis highlights which features are most informative for distinguishing AI roles and provides a foundation for future models.
+In order to create the model, we encoded the categorical variables and used MinMaxScaler to size the continuous variables to a 0-1 scale, which allowed the training model to weigh each variable equally. After obtaining the model data, we then charted the feature importance, making sure to take the aggregate coefficients to avoid over-reporting the importance of the encoded variables. The model reveals that salary is the most important feature when determining whether or not a role involves AI. When using the model against a sample data set, it predicted that the $300,000 salary job in Massachusetts with 10 years of minimum experience would involve AI, but the $150,000 salary job in New York with 15 minimum years of experience would not.
+
+In order to refine its predictive capabilities, this model could benefit from some fine-tuning; right now it is evaluating probability and deeming any data with over 50% chance as involving AI, but if we were to get more granular with the data, the ideal threshold to use in this process may be closer to 35% or 40%. Additionally, given the ever-changing landscape of AI and the continued trend of AI becoming commonplace in many jobs, that threshold may continue to lower with time.
