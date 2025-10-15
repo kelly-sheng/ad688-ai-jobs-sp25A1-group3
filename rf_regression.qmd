@@ -194,7 +194,7 @@ results = predictions_array.select(
 results.show(truncate=False)
 ```
 
-# Random Forest Regression Summary
+# Logistic Regression Summary
 
 This analysis skimmed the job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model trained on five features: minimum years of experience, average salary, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, offer higher compensation, demand advanced degrees, and are concentrated in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience and salary were the most influential factors, followed by state, education, and remote type, reflecting the expected patterns of AI job characteristics.
 
