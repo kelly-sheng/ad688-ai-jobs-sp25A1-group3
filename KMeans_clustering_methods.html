@@ -234,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="6d964361" class="cell" data-execution_count="1">
+<div id="5d098187" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -292,7 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   num_cols: ['SALARY', 'MIN_YEARS_EXPERIENCE', 'MAX_YEARS_EXPERIENCE', 'DURATION']</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/3257818786.py:20: DtypeWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71962/3257818786.py:20: DtypeWarning:
 
 Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
@@ -300,7 +300,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </div>
 <section id="helpers" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Helpers</h1>
-<div id="0ab267b3" class="cell" data-execution_count="2">
+<div id="478f04d4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _clean_text_input(x):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Accept Series, 1-col DataFrame, or numpy array from ColumnTransformer</span></span>
@@ -327,7 +327,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </section>
 <section id="preprocessing" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Preprocessing</h1>
-<div id="febd8136" class="cell" data-execution_count="3">
+<div id="e9ca98d6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>text_pipe <span class="op">=</span> Pipeline([</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"clean"</span>, FunctionTransformer(_clean_text_input, validate<span class="op">=</span><span class="va">False</span>)),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"tfidf"</span>, TfidfVectorizer(</span>
@@ -366,7 +366,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </section>
 <section id="model-selection" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Model Selection</h1>
-<div id="6c085841" class="cell" data-execution_count="4">
+<div id="319993b4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>k_values <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">4</span>, <span class="dv">11</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>inertias, sils <span class="op">=</span> [], []</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -417,7 +417,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </section>
 <section id="final-fit" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Final fit</h1>
-<div id="2622ac5e" class="cell" data-execution_count="5">
+<div id="c44aa1a8" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> TruncatedSVD  <span class="co"># used later</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>best_k, n_init<span class="op">=</span><span class="dv">20</span>, random_state<span class="op">=</span>RANDOM_STATE)</span>
@@ -471,7 +471,7 @@ Top terms file saved -&gt; output/cluster_top_terms.txt</code></pre>
 </section>
 <section id="cluster-summary-charts" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Cluster summary charts</h1>
-<div id="016616f7" class="cell" data-execution_count="6">
+<div id="d8c96084" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.ticker <span class="im">import</span> FuncFormatter</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -550,7 +550,7 @@ Top terms file saved -&gt; output/cluster_top_terms.txt</code></pre>
 <span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>stats_out.to_csv(<span class="st">"output/cluster_summary.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>stats_out.head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/2483979144.py:22: MatplotlibDeprecationWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71962/2483979144.py:22: MatplotlibDeprecationWarning:
 
 The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
 </code></pre>
@@ -640,7 +640,7 @@ The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.
 </section>
 <section id="single-cluster-scatter" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Single Cluster Scatter</h1>
-<div id="f402035b" class="cell" data-dependson="[&quot;svd-2d&quot;]" data-execution_count="8">
+<div id="793aa07b" class="cell" data-dependson="[&quot;svd-2d&quot;]" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">6</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">sorted</span>(np.unique(labels)):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> (labels <span class="op">==</span> c)</span>
@@ -664,7 +664,7 @@ The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.
 </section>
 <section id="reference-table" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Reference table</h1>
-<div id="6a4f6a6c" class="cell" data-execution_count="9">
+<div id="936278cc" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    adjusted_rand_score, normalized_mutual_info_score,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    homogeneity_score, completeness_score, v_measure_score</span>
@@ -722,7 +722,7 @@ Overall purity: 0.999</code></pre>
 </section>
 <section id="heatmap-prep" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> Heatmap prep</h1>
-<div id="b3652935" class="cell" data-execution_count="10">
+<div id="c2930d64" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick diagnostics for label visibility</span></span>
@@ -842,7 +842,7 @@ Overall purity: 0.999</code></pre>
 </section>
 <section id="heatmap-plot" class="level1" data-number="10">
 <h1 data-number="10"><span class="header-section-number">10</span> Heatmap plot</h1>
-<div id="19e3eb07" class="cell" data-execution_count="11">
+<div id="3ff133ea" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, pandas <span class="im">as</span> pd, os</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
@@ -886,29 +886,36 @@ Overall purity: 0.999</code></pre>
 <span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to row percentages</span></span>
 <span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>pct <span class="op">=</span> ct_reduced.div(ct_reduced.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>), axis<span class="op">=</span><span class="dv">0</span>) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> pct.shape[<span class="dv">1</span>] <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" </span><span class="sc">{</span>REF_COL<span class="sc">}</span><span class="ss"> doesn’t have enough diversity after cleaning. "</span></span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"Try overriding REF_COL to something like NAICS_2022_4_NAME or ONET_NAME."</span>)</span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="bu">max</span>(<span class="dv">10</span>, <span class="fl">0.7</span><span class="op">*</span>pct.shape[<span class="dv">1</span>]), <span class="bu">max</span>(<span class="dv">4</span>, <span class="fl">0.6</span><span class="op">*</span>pct.shape[<span class="dv">0</span>])))</span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_sns:</span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> sns.heatmap(pct, cmap<span class="op">=</span><span class="st">"Blues"</span>, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".0f"</span>,</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>                         cbar_kws<span class="op">=</span>{<span class="st">"label"</span>: <span class="st">"% within cluster"</span>})</span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>        im <span class="op">=</span> plt.imshow(pct.values, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"Blues"</span>)</span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        plt.colorbar(im, label<span class="op">=</span><span class="st">"% within cluster"</span>)</span>
-<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>        plt.xticks(<span class="bu">range</span>(pct.shape[<span class="dv">1</span>]), pct.columns, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
-<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>        plt.yticks(<span class="bu">range</span>(pct.shape[<span class="dv">0</span>]), pct.index)</span>
-<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> plt.gca()</span>
-<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Cluster vs </span><span class="sc">{</span>REF_COL<span class="sc">}</span><span class="ss"> (row %)"</span>)</span>
-<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(REF_COL)<span class="op">;</span> plt.ylabel(<span class="st">"Cluster"</span>)</span>
-<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">"output/cluster_vs_reference_heatmap.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Clean display strings (remove underscores)</span></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>ref_label_clean <span class="op">=</span> REF_COL.replace(<span class="st">"_"</span>, <span class="st">" "</span>)</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>xtick_labels_clean <span class="op">=</span> [<span class="bu">str</span>(c).replace(<span class="st">"_"</span>, <span class="st">" "</span>) <span class="cf">for</span> c <span class="kw">in</span> pct.columns]</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> pct.shape[<span class="dv">1</span>] <span class="op">&lt;=</span> <span class="dv">1</span>:</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f" </span><span class="sc">{</span>REF_COL<span class="sc">}</span><span class="ss"> doesn’t have enough diversity after cleaning. "</span></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"Try overriding REF_COL to something like NAICS_2022_4_NAME or ONET_NAME."</span>)</span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="bu">max</span>(<span class="dv">10</span>, <span class="fl">0.7</span><span class="op">*</span>pct.shape[<span class="dv">1</span>]), <span class="bu">max</span>(<span class="dv">4</span>, <span class="fl">0.6</span><span class="op">*</span>pct.shape[<span class="dv">0</span>])))</span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> use_sns:</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> sns.heatmap(pct, cmap<span class="op">=</span><span class="st">"Blues"</span>, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".0f"</span>,</span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>                         cbar_kws<span class="op">=</span>{<span class="st">"label"</span>: <span class="st">"% within cluster"</span>})</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>        <span class="co"># apply cleaned/angled x labels</span></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>        ax.set_xticklabels(xtick_labels_clean, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a>        im <span class="op">=</span> plt.imshow(pct.values, aspect<span class="op">=</span><span class="st">"auto"</span>, cmap<span class="op">=</span><span class="st">"Blues"</span>)</span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>        plt.colorbar(im, label<span class="op">=</span><span class="st">"% within cluster"</span>)</span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>        plt.xticks(<span class="bu">range</span>(pct.shape[<span class="dv">1</span>]), xtick_labels_clean, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>        plt.yticks(<span class="bu">range</span>(pct.shape[<span class="dv">0</span>]), pct.index)</span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>        ax <span class="op">=</span> plt.gca()</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Cluster vs </span><span class="sc">{</span>ref_label_clean<span class="sc">}</span><span class="ss"> (row %)"</span>)</span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(ref_label_clean)</span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Cluster"</span>)</span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>    plt.savefig(<span class="st">"output/cluster_vs_reference_heatmap.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59075/2086638697.py:62: UserWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71962/182419027.py:69: UserWarning:
 
 Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
 </code></pre>
@@ -916,12 +923,12 @@ Tight layout not applied. The bottom and top margins cannot be made large enough
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="KMeans_clustering_methods_files/figure-html/cell-12-output-2.png" width="828" height="889" class="figure-img"></p>
+<p><img src="KMeans_clustering_methods_files/figure-html/cell-12-output-2.png" width="1064" height="744" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>This figure is a heatmap of job‑posting shares by industry, displayed as row percentages. The leftmost column— that includes Professional, Scientific &amp; Technical Services, shows the darkest shading overall, meaning a large portion of postings in each row come from that industry, while lighter columns represent industries that account for a smaller share. The Profesional, Scientific, and Technical Services industry does seem to be the hottest job market based off of this dataset, however, this does not mean that it is necessarily driven by AI alone.</p>
+<p>``` This figure is a heatmap of job‑posting shares by industry, displayed as row percentages. The leftmost column— that includes Professional, Scientific &amp; Technical Services, shows the darkest shading overall, meaning a large portion of postings in each row come from that industry, while lighter columns represent industries that account for a smaller share. The Profesional, Scientific, and Technical Services industry does seem to be the hottest job market based off of this dataset, however, this does not mean that it is necessarily driven by AI alone.</p>
 </section>
 <section id="kmeans-summary" class="level1" data-number="11">
 <h1 data-number="11"><span class="header-section-number">11</span> Kmeans Summary</h1>

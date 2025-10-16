@@ -9,7 +9,7 @@
 <meta name="author" content="Kelly, Sabrina, Makenzie">
 <meta name="dcterms.date" content="2025-10-15">
 
-<title>AI vs.&nbsp;Non-AI Careers</title>
+<title>Logistic Regression Summary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -163,7 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">AI vs.&nbsp;Non-AI Careers</h1>
+      <h1 class="title">Logistic Regression Summary</h1>
             <p class="subtitle lead">Final Report</p>
                       </div>
   </div>
@@ -206,14 +206,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#logistic-regression-summary" id="toc-logistic-regression-summary" class="nav-link active" data-scroll-target="#logistic-regression-summary"><span class="header-section-number">1</span> Logistic Regression Summary</a></li>
-  </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lr_regression.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
-    </div>
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lr_regression.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -221,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="821ceccb" class="cell" data-execution_count="1">
+<div id="cdfa5d22" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession, Row</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> col, lit, concat_ws, lower, regexp_replace, when, trim, mean <span class="im">as</span> _mean</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> DoubleType</span>
@@ -324,133 +318,173 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>WARNING: Using incubator modules: jdk.incubator.vector
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
-25/10/15 13:53:38 WARN Utils: Your hostname, Kellys-MacBook-Air.local, resolves to a loopback address: 127.0.0.1; using 192.168.1.6 instead (on interface en0)
-25/10/15 13:53:38 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+25/10/15 23:06:11 WARN Utils: Your hostname, Kellys-MacBook-Air.local, resolves to a loopback address: 127.0.0.1; using 192.168.1.6 instead (on interface en0)
+25/10/15 23:06:11 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-25/10/15 13:53:38 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-25/10/15 13:53:39 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+25/10/15 23:06:12 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 [Stage 1:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 2:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 5:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 8:&gt;                                                          (0 + 1) / 1]                                                                                [Stage 14:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 20:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 26:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 29:&gt;                                                         (0 + 1) / 1]                                                                                [Stage 30:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
 </div>
 </div>
-<div id="3152b3bd" class="cell" data-execution_count="2">
+<div id="6e4c0927" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Predict &amp; evaluate ---</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> lr_model.transform(test_df)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>evaluator <span class="op">=</span> BinaryClassificationEvaluator(labelCol<span class="op">=</span><span class="st">"requires_ai"</span>, metricName<span class="op">=</span><span class="st">"areaUnderROC"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>roc_auc <span class="op">=</span> evaluator.evaluate(predictions)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ROC-AUC: </span><span class="sc">{</span>roc_auc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Extract logistic regression stage ---</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>lr_stage <span class="op">=</span> lr_model.stages[<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># LogisticRegressionModel in Spark stores coefficients in a dense vector</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>coefficients <span class="op">=</span> lr_stage.coefficients.toArray()</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Compute feature sizes ---</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of numeric features</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>num_numeric <span class="op">=</span> <span class="bu">len</span>(numeric_cols)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot vector sizes for categorical features</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>features_vec <span class="op">=</span> lr_model.transform(test_df).select(<span class="st">"features"</span>).first()[<span class="dv">0</span>]</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>vector_size <span class="op">=</span> <span class="bu">len</span>(features_vec)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>num_categorical <span class="op">=</span> <span class="bu">len</span>(categorical_cols)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>categorical_vector_sizes <span class="op">=</span> [(vector_size <span class="op">-</span> num_numeric)<span class="op">//</span>num_categorical]<span class="op">*</span>num_categorical</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Aggregate coefficients by feature ---</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>feature_sizes <span class="op">=</span> [<span class="dv">1</span>]<span class="op">*</span>num_numeric <span class="op">+</span> categorical_vector_sizes</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> numeric_cols <span class="op">+</span> categorical_cols</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>agg_importances <span class="op">=</span> []</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> size <span class="kw">in</span> feature_sizes:</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Take mean of absolute values of coefficients for categorical features</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    agg_importances.append(np.mean(np.<span class="bu">abs</span>(coefficients[start:start<span class="op">+</span>size])))</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    start <span class="op">+=</span> size</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create DataFrame &amp; plot ---</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>importance_df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: feature_names,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Importance"</span>: agg_importances</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>}).sort_values(<span class="st">"Importance"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>))</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>plt.barh(importance_df[<span class="st">"Feature"</span>], importance_df[<span class="st">"Importance"</span>])</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Mean Absolute Coefficient"</span>)</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Logistic Regression Feature Importances (mean per categorical vector)"</span>)</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plt.gca().invert_yaxis()</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"output/logistic_regression.png"</span>, dpi<span class="op">=</span><span class="dv">200</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Extract logistic regression stage ---</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>lr_stage <span class="op">=</span> lr_model.stages[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>coefficients <span class="op">=</span> lr_stage.coefficients.toArray()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Compute feature sizes ---</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>num_numeric <span class="op">=</span> <span class="bu">len</span>(numeric_cols)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Get total vector length (for one sample)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>features_vec <span class="op">=</span> lr_model.transform(test_df).select(<span class="st">"features"</span>).first()[<span class="dv">0</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>vector_size <span class="op">=</span> <span class="bu">len</span>(features_vec)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Approximate one-hot encoded vector sizes per categorical feature</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>num_categorical <span class="op">=</span> <span class="bu">len</span>(categorical_cols)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>categorical_vector_sizes <span class="op">=</span> [(vector_size <span class="op">-</span> num_numeric) <span class="op">//</span> num_categorical] <span class="op">*</span> num_categorical</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Aggregate coefficients by feature group ---</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>feature_sizes <span class="op">=</span> [<span class="dv">1</span>] <span class="op">*</span> num_numeric <span class="op">+</span> categorical_vector_sizes</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> numeric_cols <span class="op">+</span> categorical_cols</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>agg_importances <span class="op">=</span> []</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> size <span class="kw">in</span> feature_sizes:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    agg_importances.append(np.mean(np.<span class="bu">abs</span>(coefficients[start:start <span class="op">+</span> size])))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    start <span class="op">+=</span> size</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create DataFrame of feature importance ---</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>importance_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Feature"</span>: feature_names,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Importance"</span>: agg_importances</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>}).sort_values(<span class="st">"Importance"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Replace technical names with readable labels ---</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>label_map <span class="op">=</span> {</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE"</span>: <span class="st">"Minimum Years of Experience"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_EDULEVELS"</span>: <span class="st">"Minimum Education Level"</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>: <span class="st">"Industry Classification (NAICS2)"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"STATE_NAME"</span>: <span class="st">"State"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REMOTE_TYPE_NAME"</span>: <span class="st">"Remote Work Type"</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>importance_df[<span class="st">"Feature Label"</span>] <span class="op">=</span> importance_df[<span class="st">"Feature"</span>].<span class="bu">map</span>(label_map)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Plot with readable labels ---</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">3</span>))</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>plt.barh(importance_df[<span class="st">"Feature Label"</span>], importance_df[<span class="st">"Importance"</span>], height<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Mean Absolute Coefficient"</span>)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Logistic Regression Feature Importances"</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>plt.gca().invert_yaxis()</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[Stage 45:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ROC-AUC: 0.655</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>[Stage 54:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="lr_regression_files/figure-html/cell-3-output-4.png" width="789" height="449" class="figure-img"></p>
+<p><img src="lr_regression_files/figure-html/cell-3-output-2.png" width="757" height="278" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.</p>
-<div id="d7b5550e" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create sample job listings ---</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sample_jobs <span class="op">=</span> [</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">15.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Professional, Scientific, and Technical Services"</span>, STATE_NAME<span class="op">=</span><span class="st">"New York"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">3.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Remote"</span>),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">5.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Finance and Insurance"</span>, STATE_NAME<span class="op">=</span><span class="st">"Texas"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">2.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Remote"</span>),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">10.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Real Estate and Rental and Leasing"</span>, STATE_NAME<span class="op">=</span><span class="st">"Minnesota"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">0.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Hybrid Remote"</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">15.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Health Care and Social Assistance"</span>, STATE_NAME<span class="op">=</span><span class="st">"New York"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">4.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Not Remote"</span>),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>sample_df <span class="op">=</span> spark.createDataFrame(sample_jobs)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure numeric columns are DoubleType</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> [<span class="st">"MIN_YEARS_EXPERIENCE"</span>, <span class="st">"MIN_EDULEVELS"</span>]:</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    sample_df <span class="op">=</span> sample_df.withColumn(c, col(c).cast(DoubleType()))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Transform samples through the trained pipeline ---</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> lr_model.transform(sample_df)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Extract probability of AI class ---</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>predictions_array <span class="op">=</span> predictions.withColumn(<span class="st">"prob_array"</span>, vector_to_array(col(<span class="st">"probability"</span>)))</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Show results ---</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> predictions_array.select(</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_YEARS_EXPERIENCE"</span>,</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2_NAME"</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"STATE_NAME"</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MIN_EDULEVELS"</span>,</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REMOTE_TYPE_NAME"</span>,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"prob_array"</span>)[<span class="dv">1</span>].alias(<span class="st">"AI_prob"</span>),</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"prediction"</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>results.show(truncate<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="16fbfeaa" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Logistic Regression Summary Statistics ---</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the trained Logistic Regression stage from the pipeline</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>lr_stage <span class="op">=</span> lr_model.stages[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Logistic Regression Model Summary ==="</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Intercept: </span><span class="sc">{</span>lr_stage<span class="sc">.</span>intercept<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Number of Coefficients: </span><span class="sc">{</span><span class="bu">len</span>(lr_stage.coefficients)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> lr_stage.summary</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Area Under ROC: </span><span class="sc">{</span>summary<span class="sc">.</span>areaUnderROC<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy: </span><span class="sc">{</span>summary<span class="sc">.</span>accuracy<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precision: </span><span class="sc">{</span>summary<span class="sc">.</span>weightedPrecision<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recall: </span><span class="sc">{</span>summary<span class="sc">.</span>weightedRecall<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"F1 Score: </span><span class="sc">{</span>summary<span class="sc">.</span>weightedFMeasure()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>+--------------------+------------------------------------------------+----------+-------------+----------------+-------------------+----------+
-|MIN_YEARS_EXPERIENCE|NAICS2_NAME                                     |STATE_NAME|MIN_EDULEVELS|REMOTE_TYPE_NAME|AI_prob            |prediction|
-+--------------------+------------------------------------------------+----------+-------------+----------------+-------------------+----------+
-|15.0                |Professional, Scientific, and Technical Services|New York  |3.0          |Remote          |0.5524002949151843 |1.0       |
-|5.0                 |Finance and Insurance                           |Texas     |2.0          |Remote          |0.17876889392822903|0.0       |
-|10.0                |Real Estate and Rental and Leasing              |Minnesota |0.0          |Hybrid Remote   |0.18450482855782802|0.0       |
-|15.0                |Health Care and Social Assistance               |New York  |4.0          |Not Remote      |0.1876643082460473 |0.0       |
-+--------------------+------------------------------------------------+----------+-------------+----------------+-------------------+----------+
+<pre><code>
+=== Logistic Regression Model Summary ===
+Intercept: -1.9112100403603867
+Number of Coefficients: 78</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 46:&gt;                                                         (0 + 1) / 1]                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Area Under ROC: 0.657</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 55:&gt;                                                         (0 + 1) / 1]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy: 0.769
+Precision: 0.723
+Recall: 0.769
+F1 Score: 0.680</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+</div>
+<div id="191eeb12" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Create sample job listings ---</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sample_jobs <span class="op">=</span> [</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">15.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Professional, Scientific, and Technical Services"</span>, STATE_NAME<span class="op">=</span><span class="st">"New York"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">3.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Remote"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">5.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Finance and Insurance"</span>, STATE_NAME<span class="op">=</span><span class="st">"Texas"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">2.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Remote"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">10.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Real Estate and Rental and Leasing"</span>, STATE_NAME<span class="op">=</span><span class="st">"Minnesota"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">0.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Hybrid Remote"</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    Row(MIN_YEARS_EXPERIENCE<span class="op">=</span><span class="fl">15.0</span>, NAICS2_NAME<span class="op">=</span><span class="st">"Health Care and Social Assistance"</span>, STATE_NAME<span class="op">=</span><span class="st">"New York"</span>, MIN_EDULEVELS<span class="op">=</span><span class="fl">4.0</span>, REMOTE_TYPE_NAME<span class="op">=</span><span class="st">"Not Remote"</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>sample_df <span class="op">=</span> spark.createDataFrame(sample_jobs)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure numeric columns are DoubleType</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> [<span class="st">"MIN_YEARS_EXPERIENCE"</span>, <span class="st">"MIN_EDULEVELS"</span>]:</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    sample_df <span class="op">=</span> sample_df.withColumn(c, col(c).cast(DoubleType()))</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Transform samples through the trained pipeline ---</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> lr_model.transform(sample_df)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Extract probability of AI class ---</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>predictions_array <span class="op">=</span> predictions.withColumn(<span class="st">"prob_array"</span>, vector_to_array(col(<span class="st">"probability"</span>)))</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Show results ---</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> predictions_array.select(</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MIN_YEARS_EXPERIENCE"</span>).alias(<span class="st">"Minimum Years"</span>),</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"NAICS2_NAME"</span>).alias(<span class="st">"NAICS2 Classification"</span>),</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"STATE_NAME"</span>).alias(<span class="st">"State"</span>),</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"MIN_EDULEVELS"</span>).alias(<span class="st">"Minimum Education"</span>),</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"REMOTE_TYPE_NAME"</span>).alias(<span class="st">"Remote Type"</span>),</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"prob_array"</span>)[<span class="dv">1</span>].alias(<span class="st">"AI_prob"</span>),</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">"prediction"</span>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>results.show(truncate<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+-------------+------------------------------------------------+---------+-----------------+-------------+-------------------+----------+
+|Minimum Years|NAICS2 Classification                           |State    |Minimum Education|Remote Type  |AI_prob            |prediction|
++-------------+------------------------------------------------+---------+-----------------+-------------+-------------------+----------+
+|15.0         |Professional, Scientific, and Technical Services|New York |3.0              |Remote       |0.5524002949151843 |1.0       |
+|5.0          |Finance and Insurance                           |Texas    |2.0              |Remote       |0.17876889392822903|0.0       |
+|10.0         |Real Estate and Rental and Leasing              |Minnesota|0.0              |Hybrid Remote|0.18450482855782802|0.0       |
+|15.0         |Health Care and Social Assistance               |New York |4.0              |Not Remote   |0.1876643082460473 |0.0       |
++-------------+------------------------------------------------+---------+-----------------+-------------+-------------------+----------+
 </code></pre>
 </div>
 </div>
-<section id="logistic-regression-summary" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Logistic Regression Summary</h1>
-<p>This analysis skimmed the job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model trained on five features: minimum years of experience, NAICS2 classification, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, are concentrated in certain industries over others, demand advanced degrees, and could be more prevalent in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience was by far the most influential factor, followed by NAICS2, reflecting the expected patterns of AI job characteristics.</p>
-<p>In order to create the model, we encoded the categorical variables and used MinMaxScaler to size the continuous variables to a 0-1 scale, which allowed the training model to weigh each variable equally. After obtaining the model data, we then charted the feature importance, making sure to take the aggregate coefficients to avoid over-reporting the importance of the encoded variables. The model reveals that years of experience is the most important feature when determining whether or not a role involves AI. However, the combination of all factors can lead to dramatically different results. For example, when using the model against a sample data set, it predicted that the 15-year remote listing in New York in “Professional, Scientific, and Technical Services” would be an AI job, but the 15-year on-site listing in New York in “Health Care and Social Assistance” would not.</p>
-<p>In order to refine its predictive capabilities, this model could benefit from some fine-tuning; right now it is evaluating probability and deeming any data with over 50% chance as involving AI, but if we were to get more granular with the data, the ideal threshold to use in this process may be closer to 35% or 40%. Additionally, given the ever-changing landscape of AI and the continued trend of AI becoming commonplace in many jobs, that threshold may continue to lower with time. This tool should be consistently re-evaluated to maintain relevancy so that users can derive the most value from its results.</p>
+<p>This analysis skimmed job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model to identify AI listings that is trained on five features: minimum years of experience, NAICS2 classification, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, are concentrated in certain industries over others, demand advanced degrees, and could be more prevalent in specific regions. The model revealed that years of experience was by far the most influential factor, followed by industry, reflecting the expected patterns of AI job characteristics that were highlighted in previous analysis.</p>
+<p>In order to create the model, we encoded the categorical variables and used MinMaxScaler to size the continuous variables to a 0-1 scale, which allowed the training model to weigh each variable equally. After obtaining the model data, we then charted the feature importance, making sure to take the aggregate coefficients to avoid over-reporting the importance of encoded variables. The model reveals that years of experience is the most important feature when determining whether or not a role involves AI. However, the combination of all factors can lead to dramatically different results. For example, when using the model against a sample data set, it predicted that the 15-year remote listing in New York in “Professional, Scientific, and Technical Services” would be an AI job, but the 15-year on-site listing in New York in “Health Care and Social Assistance” would not. This emphasizes the need for job searchers to use a holistic view when analyzing listings for AI expectations.</p>
+<p>In summary, the logistic regression model achieved an Area Under the ROC Curve score of 0.657, indicating a moderate but limited predictive ability to distinguish between AI-related and non-AI job postings. The accuracy score of 76.9% shows that the model correctly classified roughly three out of every four job postings when testing against the training dataset. Its precision score means that, when the model predicts a posting as AI-related, it is correct around 72% of the time, while the recall score indicates it successfully identifies around 77% of true AI-related postings. The F1 score represents the tradeoff between precision and recall; 0.68 indicates a reasonable balance. Together, these metrics show that the model performs reasonably well, though there is definitely room for improvement.</p>
+<p>To refine its predictive capabilities, this model could benefit from some fine-tuning; right now it is evaluating probability and deeming any data with over 50% chance as involving AI, but if we were to get more granular with the data, the ideal threshold to use in this process may be closer to 35% or 40%. Additionally, given the ever-changing landscape of AI and the continued trend of AI becoming commonplace in many jobs, that threshold may continue to lower with time. This tool should be consistently re-evaluated to maintain relevancy so that users can derive the most value from its results.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

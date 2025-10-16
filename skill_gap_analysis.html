@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="012e4af1" class="cell" data-execution_count="1">
+<div id="ea001a40" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>raw_df <span class="op">=</span> pd.read_csv(<span class="st">"data/lightcast_job_postings.csv"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.columns.tolist()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/1289692877.py:5: DtypeWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71898/1289692877.py:5: DtypeWarning:
 
 Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
@@ -253,7 +253,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </div>
 <section id="cleaning-data" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Cleaning Data</h1>
-<div id="d16602c0" class="cell" data-execution_count="2">
+<div id="383706b3" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>,</span>
@@ -272,7 +272,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.head()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:9: FutureWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71898/2470702404.py:9: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -281,7 +281,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71898/2470702404.py:10: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -290,7 +290,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_59017/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71898/2470702404.py:10: FutureWarning:
 
 Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value 'Unknown' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
 </code></pre>
@@ -308,7 +308,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <li>5 = Expert</li>
 </ul>
 <p><strong>Note:</strong> We build the team skill dataframe based on our skills and the most in-demand IT skills and set 1-5 levels for each team member. This allows us to compare side by side in the comparation analysis below.</p>
-<div id="7aca9118" class="cell" data-execution_count="3">
+<div id="d3cace2c" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>skills_data <span class="op">=</span> {</span>
@@ -363,7 +363,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <p>The team skills levels headmap demostrated we are strogest in communication and problem solving. We also solid in SQL, dashboard /Tableau, and finance. Our weak spots are Computer Science, operations, project management, and writing clear business requiments and process steps.</p>
 <section id="top-strengths-per-person" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="top-strengths-per-person"><span class="header-section-number">2.1</span> Top strengths per person**</h2>
-<div id="aba82ce4" class="cell" data-execution_count="4">
+<div id="3c4cd196" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>top_strengths <span class="op">=</span> df_skills.<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[row <span class="op">==</span> row.<span class="bu">max</span>()].index.tolist(), axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>top_strengths.to_frame(name<span class="op">=</span><span class="st">"Top Strength Skills"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -403,7 +403,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </section>
 <section id="team-averages-by-skill" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="team-averages-by-skill"><span class="header-section-number">2.2</span> Team averages by skill</h2>
-<div id="84d807e4" class="cell" data-execution_count="5">
+<div id="7e783828" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>team_avg <span class="op">=</span> df_skills.mean().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>team_avg.to_frame(name<span class="op">=</span><span class="st">"Team Average (1–5)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -510,7 +510,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <h1 data-number="3"><span class="header-section-number">3</span> Compare team skills to industry requirements</h1>
 <section id="extract-the-most-in-demand-skills-from-it-job-postings" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="extract-the-most-in-demand-skills-from-it-job-postings"><span class="header-section-number">3.1</span> Extract the Most In-Demand Skills from IT Job Postings</h2>
-<div id="b638f547" class="cell" data-execution_count="6">
+<div id="5314b5a5" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ast</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -548,7 +548,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <section id="industry-expertise-demand-data-driven-15" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="industry-expertise-demand-data-driven-15"><span class="header-section-number">3.2</span> Industry expertise demand (data-driven 1–5)</h2>
 <p>In this section, We built a simple market target for each top skill using what employers write in job postings. First, we joined the job title and description so we could read the text. If a post listed MIN_YEARS_EXPERIENCE, we used it; if not, we pulled numbers like “3+ years” from the text and mapped years to a 1–5 level (with a small bump so “3 years” sits in the middle of a 3–5 range). Next, we read seniority words in the title (junior vs.&nbsp;senior/lead/manager) and skill phrases in the text (basic, intermediate, advanced, expert) and turned those into levels too. For each posting and skill, we combined the three signals, years (50%), seniority (30%), and phrases (20%) to get one score. Finally, we averaged those scores across all postings for each skill to get a 1–5 industry target, which we used to compare with our team’s ratings.</p>
-<div id="ca1e90b9" class="cell" data-execution_count="7">
+<div id="ec16d4e7" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -666,7 +666,7 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </section>
 <section id="team-skills-vs.-industry-requiments" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="team-skills-vs.-industry-requiments"><span class="header-section-number">3.3</span> Team Skills Vs. Industry Requiments</h2>
-<div id="ce260130" class="cell" data-execution_count="8">
+<div id="e5d3affa" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -934,7 +934,7 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<div id="d98ce815" class="cell" data-execution_count="9">
+<div id="33c409f2" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -976,7 +976,7 @@ Name: Target (Data-Driven), dtype: float64</code></pre>
 </section>
 <section id="gaps-market-adjusted-priorities" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="gaps-market-adjusted-priorities"><span class="header-section-number">3.4</span> Gaps + Market Adjusted Priorities</h2>
-<div id="7b4a65fb" class="cell" data-execution_count="10">
+<div id="95cfd6f0" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unweighted gap (Target − Team Avg)</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>team_avg <span class="op">=</span> df_team_top10.mean()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>gap <span class="op">=</span> expected_per_skill <span class="op">-</span> team_avg</span>

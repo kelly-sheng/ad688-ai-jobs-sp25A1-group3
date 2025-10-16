@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="d69e945c" class="cell" data-execution_count="1">
+<div id="38b7b259" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>raw_df <span class="op">=</span> pd.read_csv(<span class="st">"data/lightcast_job_postings.csv"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.columns.tolist()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/1289692877.py:5: DtypeWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71822/1289692877.py:5: DtypeWarning:
 
 Columns (19,30) have mixed types. Specify dtype option on import or set low_memory=False.
 </code></pre>
@@ -247,7 +247,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 </div>
 <section id="cleaning-data" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Cleaning Data</h1>
-<div id="7d5c985c" class="cell" data-execution_count="2">
+<div id="90bdb885" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>columns_to_drop <span class="op">=</span> [</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ID"</span>, <span class="st">"URL"</span>, <span class="st">"ACTIVE_URLS"</span>, <span class="st">"DUPLICATES"</span>, <span class="st">"LAST_UPDATED_TIMESTAMP"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"NAICS2"</span>, <span class="st">"NAICS3"</span>, <span class="st">"NAICS4"</span>, <span class="st">"NAICS5"</span>, <span class="st">"NAICS6"</span>,</span>
@@ -266,7 +266,7 @@ Columns (19,30) have mixed types. Specify dtype option on import or set low_memo
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#raw_df.head()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:9: FutureWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71822/2470702404.py:9: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -275,7 +275,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71822/2470702404.py:10: FutureWarning:
 
 A value is trying to be set on a copy of a DataFrame or Series through chained assignment using an inplace method.
 The behavior will change in pandas 3.0. This inplace method will never work because the intermediate object on which we are setting values always behaves as a copy.
@@ -284,7 +284,7 @@ For example, when doing 'df[col].method(value, inplace=True)', try using 'df.met
 
 
 
-/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/2470702404.py:10: FutureWarning:
+/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71822/2470702404.py:10: FutureWarning:
 
 Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value 'Unknown' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
 </code></pre>
@@ -293,7 +293,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </section>
 <section id="plot-setup-for-ai-vs-non-ai-job-posting-count" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Plot setup for AI vs Non-AI job posting count</h1>
-<div id="bb63b7e3" class="cell" data-df-print="default" data-execution_count="3">
+<div id="80aa3f24" class="cell" data-df-print="default" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -406,7 +406,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </section>
 <section id="job-postings-for-ai-vs-non-ai-jobs" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Job Postings for AI vs Non-AI Jobs</h1>
-<div id="1af9cae1" class="cell" data-execution_count="4">
+<div id="2fc93935" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.ticker <span class="im">import</span> FuncFormatter</span>
@@ -444,7 +444,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 </section>
 <section id="prep-for-monthly-ai-counts" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Prep for monthly AI counts</h1>
-<div id="a971db71" class="cell" data-df-print="default" data-execution_count="5">
+<div id="25d448c4" class="cell" data-df-print="default" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -526,7 +526,7 @@ Setting an item of incompatible dtype is deprecated and will raise an error in a
 <span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>growth_top_rounded[<span class="st">"growth_pct"</span>] <span class="op">=</span> growth_top_rounded[<span class="st">"growth_pct"</span>].<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>growth_top_rounded.head(top_n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_58932/672499099.py:67: DeprecationWarning:
+<pre><code>/var/folders/7j/ct705g296ls7nrjh30h9pyg40000gn/T/ipykernel_71822/672499099.py:67: DeprecationWarning:
 
 DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
 </code></pre>
@@ -666,7 +666,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </section>
 <section id="ai-driven-job-growth-by-industry" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> AI-Driven Job Growth by Industry</h1>
-<div id="254a2fce" class="cell" data-execution_count="6">
+<div id="b192cec2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Short, readable labels + plot &amp; save (Option B) -------------------------</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
@@ -733,7 +733,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </section>
 <section id="non-ai-job-posting-growth-by-industry" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Non-AI Job Posting Growth by Industry</h1>
-<div id="8746403d" class="cell" data-execution_count="7">
+<div id="d62f51a8" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
@@ -909,7 +909,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 </div>
 </div>
-<div id="2a5f13a4" class="cell" data-execution_count="8">
+<div id="08625c07" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -971,7 +971,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </section>
 <section id="ai-powered-roles-vs-non-ai-roles-salary-prep" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> AI-powered roles vs non-ai roles salary prep</h1>
-<div id="a2737b78" class="cell" data-execution_count="9">
+<div id="e99a95af" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -1156,7 +1156,7 @@ DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprec
 </div>
 </div>
 </div>
-<div id="75c3f55f" class="cell" data-execution_count="10">
+<div id="43b1a70a" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, re</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> textwrap <span class="im">import</span> shorten</span>
