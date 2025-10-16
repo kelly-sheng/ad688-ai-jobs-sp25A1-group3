@@ -102,14 +102,22 @@ lr_model = pipeline.fit(train_df)
 ```
 
 ```{python}
-# --- Predict & evaluate ---
+# --- Predict ---
 predictions = lr_model.transform(test_df)
-evaluator = BinaryClassificationEvaluator(labelCol="requires_ai", metricName="areaUnderROC")
-roc_auc = evaluator.evaluate(predictions)
-print(f"ROC-AUC: {roc_auc:.3f}")
 
 # --- Extract logistic regression stage ---
 lr_stage = lr_model.stages[-1]
+
+print("\n=== Logistic Regression Model Summary ===")
+print(f"Intercept: {lr_stage.intercept}")
+print(f"Number of Coefficients: {len(lr_stage.coefficients)}")
+
+lr_stage.summary
+print(f"Area Under ROC: {summary.areaUnderROC:.3f}")
+print(f"Accuracy: {summary.accuracy:.3f}")
+print(f"Precision: {summary.weightedPrecision:.3f}")
+print(f"Recall: {summary.weightedRecall:.3f}")
+print(f"F1 Score: {summary.weightedFMeasure():.3f}")
 
 # LogisticRegressionModel in Spark stores coefficients in a dense vector
 coefficients = lr_stage.coefficients.toArray()
@@ -133,22 +141,30 @@ for size in feature_sizes:
     # Take mean of absolute values of coefficients for categorical features
     agg_importances.append(np.mean(np.abs(coefficients[start:start+size])))
     start += size
+```
 
+```{python}
 # --- Create DataFrame & plot ---
-importance_df = pd.DataFrame({
-    "Feature": feature_names,
-    "Importance": agg_importances
-}).sort_values("Importance", ascending=False)
+label_map = {
+    "MIN_YEARS_EXPERIENCE": "Minimum Years of Experience",
+    "MIN_EDULEVELS": "Minimum Education Level",
+    "NAICS2_NAME": "Industry Classification (NAICS2)",
+    "STATE_NAME": "State",
+    "REMOTE_TYPE_NAME": "Remote Work Type"
+}
 
-plt.figure(figsize=(8,5))
-plt.barh(importance_df["Feature"], importance_df["Importance"])
+# Apply readable labels
+importance_df["Feature Label"] = importance_df["Feature"].map(label_map)
+
+# --- Plot with readable labels ---
+plt.figure(figsize=(8, 3))
+plt.barh(importance_df["Feature Label"], importance_df["Importance"], height=0.4)
 plt.xlabel("Mean Absolute Coefficient")
 plt.title("Logistic Regression Feature Importances (mean per categorical vector)")
 plt.gca().invert_yaxis()
-plt.savefig("output/logistic_regression.png", dpi=200, bbox_inches="tight")
+plt.tight_layout()
 plt.show()
 ```
-ROC-AUC was used instead of accuracy because it is more suited for binary classifications such as AI vs non-AI.
 
 ```{python}
 # --- Create sample job listings ---
@@ -187,8 +203,10 @@ results.show(truncate=False)
 
 # Logistic Regression Summary
 
-This analysis skimmed the job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model trained on five features: minimum years of experience, NAICS2 classification, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, are concentrated in certain industries over others, demand advanced degrees, and could be more prevalent in specific regions, while remote flexibility can influence applicant reach. The model revealed that years of experience was by far the most influential factor, followed by NAICS2, reflecting the expected patterns of AI job characteristics.
+This analysis skimmed job listings for keywords to distinguish AI from non-AI job postings and used a logistic regression model to identify AI listings that is trained on five features: minimum years of experience, NAICS2 classification, state, minimum education level, and remote work type. These features were chosen because AI roles typically require more experience, are concentrated in certain industries over others, demand advanced degrees, and could be more prevalent in specific regions. The model revealed that years of experience was by far the most influential factor, followed by industry, reflecting the expected patterns of AI job characteristics that were highlighted in previous analysis.
 
-In order to create the model, we encoded the categorical variables and used MinMaxScaler to size the continuous variables to a 0-1 scale, which allowed the training model to weigh each variable equally. After obtaining the model data, we then charted the feature importance, making sure to take the aggregate coefficients to avoid over-reporting the importance of the encoded variables. The model reveals that years of experience is the most important feature when determining whether or not a role involves AI. However, the combination of all factors can lead to dramatically different results. For example, when using the model against a sample data set, it predicted that the 15-year remote listing in New York in "Professional, Scientific, and Technical Services" would be an AI job, but the 15-year on-site listing in New York in "Health Care and Social Assistance" would not.
+In order to create the model, we encoded the categorical variables and used MinMaxScaler to size the continuous variables to a 0-1 scale, which allowed the training model to weigh each variable equally. After obtaining the model data, we then charted the feature importance, making sure to take the aggregate coefficients to avoid over-reporting the importance of encoded variables. The model reveals that years of experience is the most important feature when determining whether or not a role involves AI. However, the combination of all factors can lead to dramatically different results. For example, when using the model against a sample data set, it predicted that the 15-year remote listing in New York in "Professional, Scientific, and Technical Services" would be an AI job, but the 15-year on-site listing in New York in "Health Care and Social Assistance" would not. This emphasizes the need for job searchers to use a holistic view when analyzing listings for AI expectations.
 
-In order to refine its predictive capabilities, this model could benefit from some fine-tuning; right now it is evaluating probability and deeming any data with over 50% chance as involving AI, but if we were to get more granular with the data, the ideal threshold to use in this process may be closer to 35% or 40%. Additionally, given the ever-changing landscape of AI and the continued trend of AI becoming commonplace in many jobs, that threshold may continue to lower with time. This tool should be consistently re-evaluated to maintain relevancy so that users can derive the most value from its results.
+In summary, the logistic regression model achieved an Area Under the ROC Curve score of 0.657, indicating a moderate but limited predictive ability to distinguish between AI-related and non-AI job postings. The accuracy score of 76.9% shows that the model correctly classified roughly three out of every four job postings when testing against the training dataset. Its precision score means that, when the model predicts a posting as AI-related, it is correct around 72% of the time, while the recall score indicates it successfully identifies around 77% of true AI-related postings. The F1 score represents the tradeoff between precision and recall; 0.68 indicates a reasonable balance. Together, these metrics show that the model performs reasonably well, though there is definitely room for improvement.
+
+To refine its predictive capabilities, this model could benefit from some fine-tuning; right now it is evaluating probability and deeming any data with over 50% chance as involving AI, but if we were to get more granular with the data, the ideal threshold to use in this process may be closer to 35% or 40%. Additionally, given the ever-changing landscape of AI and the continued trend of AI becoming commonplace in many jobs, that threshold may continue to lower with time. This tool should be consistently re-evaluated to maintain relevancy so that users can derive the most value from its results.
