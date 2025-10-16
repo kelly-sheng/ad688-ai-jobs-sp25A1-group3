@@ -5,3 +5,4 @@ ai_postings_by_industry.csv
 /_site/
 .venv
 cluster_assignments.csv
+data/lightcast_job_postings.csv

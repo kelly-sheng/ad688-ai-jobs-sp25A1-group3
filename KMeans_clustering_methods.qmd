@@ -475,6 +475,9 @@ ct_reduced = ct_reduced.loc[ct_reduced.sum(axis=1) > 0]
 # Convert to row percentages
 pct = ct_reduced.div(ct_reduced.sum(axis=1), axis=0) * 100
 
+# Clean display strings (remove underscores)
+ref_label_clean = REF_COL.replace("_", " ")
+xtick_labels_clean = [str(c).replace("_", " ") for c in pct.columns]
 
 if pct.shape[1] <= 1:
     print(f" {REF_COL} doesn’t have enough diversity after cleaning. "
@@ -484,18 +487,23 @@ else:
     if use_sns:
         ax = sns.heatmap(pct, cmap="Blues", annot=True, fmt=".0f",
                          cbar_kws={"label": "% within cluster"})
+        # apply cleaned/angled x labels
+        ax.set_xticklabels(xtick_labels_clean, rotation=45, ha="right")
     else:
         im = plt.imshow(pct.values, aspect="auto", cmap="Blues")
         plt.colorbar(im, label="% within cluster")
-        plt.xticks(range(pct.shape[1]), pct.columns, rotation=45, ha="right")
+        plt.xticks(range(pct.shape[1]), xtick_labels_clean, rotation=45, ha="right")
         plt.yticks(range(pct.shape[0]), pct.index)
         ax = plt.gca()
 
-    plt.title(f"Cluster vs {REF_COL} (row %)")
-    plt.xlabel(REF_COL); plt.ylabel("Cluster")
+
+    plt.title(f"Cluster vs {ref_label_clean} (row %)")
+    plt.xlabel(ref_label_clean)
+    plt.ylabel("Cluster")
     plt.tight_layout()
     plt.savefig("output/cluster_vs_reference_heatmap.png", dpi=200, bbox_inches="tight")
     plt.show()
+```
 
 ```
 This figure is a heatmap of job‑posting shares by industry, displayed as row percentages. The leftmost column— that includes Professional, Scientific & Technical Services, shows the darkest shading overall, meaning a large portion of postings in each row come from that industry, while lighter columns represent industries that account for a smaller share. The Profesional, Scientific, and Technical Services industry does seem to be the hottest job market based off of this dataset, however, this does not mean that it is necessarily driven by AI alone.
