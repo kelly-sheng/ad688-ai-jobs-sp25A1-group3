@@ -102,49 +102,42 @@ lr_model = pipeline.fit(train_df)
 ```
 
 ```{python}
-# --- Predict ---
+# --- Predict & evaluate ---
 predictions = lr_model.transform(test_df)
+evaluator = BinaryClassificationEvaluator(labelCol="requires_ai", metricName="areaUnderROC")
 
 # --- Extract logistic regression stage ---
 lr_stage = lr_model.stages[-1]
-
-print("\n=== Logistic Regression Model Summary ===")
-print(f"Intercept: {lr_stage.intercept}")
-print(f"Number of Coefficients: {len(lr_stage.coefficients)}")
-
-lr_stage.summary
-print(f"Area Under ROC: {summary.areaUnderROC:.3f}")
-print(f"Accuracy: {summary.accuracy:.3f}")
-print(f"Precision: {summary.weightedPrecision:.3f}")
-print(f"Recall: {summary.weightedRecall:.3f}")
-print(f"F1 Score: {summary.weightedFMeasure():.3f}")
-
-# LogisticRegressionModel in Spark stores coefficients in a dense vector
 coefficients = lr_stage.coefficients.toArray()
 
 # --- Compute feature sizes ---
-# Number of numeric features
 num_numeric = len(numeric_cols)
-# One-hot vector sizes for categorical features
+
+# Get total vector length (for one sample)
 features_vec = lr_model.transform(test_df).select("features").first()[0]
 vector_size = len(features_vec)
-num_categorical = len(categorical_cols)
-categorical_vector_sizes = [(vector_size - num_numeric)//num_categorical]*num_categorical
 
-# --- Aggregate coefficients by feature ---
-feature_sizes = [1]*num_numeric + categorical_vector_sizes
+# Approximate one-hot encoded vector sizes per categorical feature
+num_categorical = len(categorical_cols)
+categorical_vector_sizes = [(vector_size - num_numeric) // num_categorical] * num_categorical
+
+# --- Aggregate coefficients by feature group ---
+feature_sizes = [1] * num_numeric + categorical_vector_sizes
 feature_names = numeric_cols + categorical_cols
 
 agg_importances = []
 start = 0
 for size in feature_sizes:
-    # Take mean of absolute values of coefficients for categorical features
-    agg_importances.append(np.mean(np.abs(coefficients[start:start+size])))
+    agg_importances.append(np.mean(np.abs(coefficients[start:start + size])))
     start += size
-```
 
-```{python}
-# --- Create DataFrame & plot ---
+# --- Create DataFrame of feature importance ---
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": agg_importances
+}).sort_values("Importance", ascending=False)
+
+# --- Replace technical names with readable labels ---
 label_map = {
     "MIN_YEARS_EXPERIENCE": "Minimum Years of Experience",
     "MIN_EDULEVELS": "Minimum Education Level",
@@ -153,17 +146,34 @@ label_map = {
     "REMOTE_TYPE_NAME": "Remote Work Type"
 }
 
-# Apply readable labels
 importance_df["Feature Label"] = importance_df["Feature"].map(label_map)
 
 # --- Plot with readable labels ---
 plt.figure(figsize=(8, 3))
 plt.barh(importance_df["Feature Label"], importance_df["Importance"], height=0.4)
 plt.xlabel("Mean Absolute Coefficient")
-plt.title("Logistic Regression Feature Importances (mean per categorical vector)")
+plt.title("Logistic Regression Feature Importances")
 plt.gca().invert_yaxis()
 plt.tight_layout()
 plt.show()
+```
+
+```{python}
+# --- Logistic Regression Summary Statistics ---
+
+# Extract the trained Logistic Regression stage from the pipeline
+lr_stage = lr_model.stages[-1]
+
+print("\n=== Logistic Regression Model Summary ===")
+print(f"Intercept: {lr_stage.intercept}")
+print(f"Number of Coefficients: {len(lr_stage.coefficients)}")
+
+summary = lr_stage.summary
+print(f"Area Under ROC: {summary.areaUnderROC:.3f}")
+print(f"Accuracy: {summary.accuracy:.3f}")
+print(f"Precision: {summary.weightedPrecision:.3f}")
+print(f"Recall: {summary.weightedRecall:.3f}")
+print(f"F1 Score: {summary.weightedFMeasure():.3f}")
 ```
 
 ```{python}
@@ -189,13 +199,13 @@ predictions_array = predictions.withColumn("prob_array", vector_to_array(col("pr
 
 # --- Show results ---
 results = predictions_array.select(
-    "MIN_YEARS_EXPERIENCE",
-    "NAICS2_NAME",
-    "STATE_NAME",
-    "MIN_EDULEVELS",
-    "REMOTE_TYPE_NAME",
+    col("MIN_YEARS_EXPERIENCE").alias("Minimum Years"),
+    col("NAICS2_NAME").alias("NAICS2 Classification"),
+    col("STATE_NAME").alias("State"),
+    col("MIN_EDULEVELS").alias("Minimum Education"),
+    col("REMOTE_TYPE_NAME").alias("Remote Type"),
     col("prob_array")[1].alias("AI_prob"),
-    "prediction"
+    col("prediction")
 )
 
 results.show(truncate=False)
